@@ -40,9 +40,11 @@ physics, without physics, etc.
 
 - General Organization -
 
-trunk/.          - Custom libraries go here
-trunk/External/. - External libraries (zlib, bzip, etc) go here
-trunk/Platform/. - Platform specific libraries and implementations go here
+trunk/
+trunk/Elements/.  - Parts that make up a larger general purpose library.  Code goes here.
+trunk/Libraries/. - Specific implementions of libraries, with used Elements externally linked.
+trunk/Externals/. - External libraries (zlib, bzip, etc) go here
+trunk/Platforms/. - Platform specific libraries and implementations go here. Elements and Libraries.
 
 tags/. - specifically notable revisions of code library.  When a game ships, etc.
 
