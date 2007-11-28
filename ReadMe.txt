@@ -23,15 +23,18 @@ This can and should include:
 - Debugging
 
 Libraries included here should NOT use virtuals, RTTI, try/catch, and other such "C enhanced"
-features.  
+features that generate code.  Templates, classes, C++ casting, and such can generate the same code
+as C would, so they're acceptable and encouraged.
 
 Engine specific implementations, despite weather they're used in multiple games or not, should not
-be included in Code Library.  Code Library is for general purpose new project code.  The only
-exception to the rules may be for a GUI/Menu/HUD library, as the concept of windows, borders, and
-so on is pretty well defined.  However, there may be multiple implementations.
+be included in Code Library.  Code Library is for general purpose new project code.
 
 If you're building a new game based on an old one, start with that games code and specialize it
 to suit your needs, in your own repository.  DON'T ISOLATE IT AND ADD IT TO CODE LIBRARY!
+
+The only exception to the rules may be for a GUI/Menu/HUD library, as the concept of windows,
+borders, and so on is pretty well defined.  However, there may be multiple implementations.  With
+physics, without physics, etc.
 
 
 
