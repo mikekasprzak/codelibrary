@@ -56,14 +56,33 @@ branches/. - Asumed to be unused, but here for future expansion
 
 Give a folder the property "svn:externals".  Edit this property, adding a list of desired targets.
 
-FileIO/   svn://Duffalo/puffbomb/trunk/Code/Library/FileIO
-Trunko/   svn://Duffalo/twisted/test2ndtrunk
-Yurbo/   svn://Duffalo/puffbomb/trunk/Code/Library/Input
+FileIO/         svn://Duffalo/puffbomb/trunk/Code/Library/FileIO
+Trunko/         svn://Duffalo/twisted/test2ndtrunk
+Yurbo/  -r214   svn://Duffalo/puffbomb/trunk/Code/Library/Input
 
 Once you do an update, the folders on the left will be created, contianing the contents of the
 folders on the right.  DON'T FORGET TO COMMIT THIS CHANGE, else nobody else will get it.
 
-Note, if one line is bad, all subsiquent lines will not be executed.
+Note, if one line is bad, all subsiquent lines will not be executed.  -r is optional, allowing you
+to specify a specific revision.  Apparently using the same folder twice (two separate externals to
+the same thing) causes an error too.
 
 Also, any changes made to the contents of the folder *MUST* be committed separately, by browsing
 to the respected folder (/FileIO/ for example).  Do so only with permission from project manager.
+
+
+
+- Notes on Library creation -
+
+Recurvise svn:externals require full paths.  Thusly, if the repository was ever moved, the
+externals would need to be updated.  SVN supports symbolic links, which includes a neat hack o
+Windows that will copy the contents of the symbolic link target to where you want it.  However,
+this is not portable behavior.  The symlink would point to a location where the data it wants
+does not exist.
+
+Localhost/127.0.0.1 don't work, because the SVN actions are performed locally, not on the network
+machine.
+
+"../" or "/reposname/.." or any such combination don't work either.  They're simply ignored.
+
+This is actually a known defect of subversions design.
