@@ -15,7 +15,12 @@ class cWhitespaceTokenizer {
 	std::string CurrentToken;
 		
 public:
-	cWhitespaceTokenizer( const char* FileName )
+	// - -------------------------------------------------------------------------------------- - //
+	inline cWhitespaceTokenizer()
+	{
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline cWhitespaceTokenizer( const char* FileName )
 	{
 		// Load the contents of FileName in to a string //
 		DataBlock* Block = new_DataBlock( FileName );
@@ -25,10 +30,42 @@ public:
 		// Process the next (first) line //
 		NextLine();
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline bool Load( const char* FileName ) {
+		DataBlock* Block = new_DataBlock( FileName );
+		if ( Block == 0 )
+			return false;
+		Data.clear();
+		Data << std::string( (char*)Block->Data, Block->Size );
+		delete_DataBlock( Block );
+		
+		// Process the next (first) line //
+		NextLine();
+		
+		return true;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline bool Save( const char* FileName ) {
+		DataBlock* Block = copy_DataBlock( Data.str().data(), Data.str().size() );
+		bool Error = write_DataBlock( Block, FileName );
+		delete_DataBlock(Block);
+		
+		return Error;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void Clear() {
+		Data.clear();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline std::stringstream& Write() {
+		return Data;
+	}
+	// - -------------------------------------------------------------------------------------- - //		
 
 public:
+	// - -------------------------------------------------------------------------------------- - //
 	// Steps the tokenizer to the next line, returns false if no lines left //
-	bool NextLine() {
+	inline bool NextLine() {
 		// Loop until we're sure we find a line with a usable token //
 		do {
 			// Grab a whole line in to a string //
@@ -48,9 +85,9 @@ public:
 		// Token found //
 		return true;
 	}
-	
+	// - -------------------------------------------------------------------------------------- - //
 	// Steps the tokenizer to the next token on this line, returns false if no tokens left //
-	bool NextToken() {
+	inline bool NextToken() {
 		// Store the stream position, just in case //
 		std::streampos Position = Line.tellg();
 		
@@ -83,59 +120,61 @@ public:
 			
 		return !Line.eof();
 	}
-	
+	// - -------------------------------------------------------------------------------------- - //	
 	// Returns true if the next token exists //
-	bool IsTokenAvailable() {
+	inline bool IsTokenAvailable() const {
 		return !Line.eof();
 	}
+	// - -------------------------------------------------------------------------------------- - //
 
 public:
+	// - -------------------------------------------------------------------------------------- - //
 	// Tests if the current token matches a pattern //
-	bool IsStringToken( const char* Pattern ) {
+	inline bool IsStringToken( const char* Pattern ) const {
 		return CurrentToken == std::string( Pattern );
 	}
 	
 	// Returns the current token as a string //
-	const std::string StringToken() {
+	inline const std::string StringToken() const {
 		return CurrentToken;
 	}
 	
 	// Returns the current token as a string, and steps to the next token //
-	const std::string StepStringToken() {
+	inline const std::string StepStringToken() {
 		const std::string Token = StringToken();
 		NextToken();
 		return Token;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Tests if the current token matches a pattern //
-	bool IsIntegerToken( const int Pattern ) {
+	inline bool IsIntegerToken( const int Pattern ) const {
 		return atoi(CurrentToken.c_str()) == Pattern;
 	}
 	
 	// Returns the current token as an Integer //
-	const int IntegerToken() {
+	inline const int IntegerToken() const {
 		return atoi(CurrentToken.c_str());
 	}
 	
 	// Returns the current token as an Integer, and steps to the next token //
-	const int StepIntegerToken() {
+	inline const int StepIntegerToken() {
 		const int Token = IntegerToken();
 		NextToken();
 		return Token;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Tests if the current token matches a pattern //
-	bool IsFloatToken( const float Pattern ) {
+	inline bool IsFloatToken( const float Pattern ) const {
 		return atof(CurrentToken.c_str()) == Pattern;
 	}
 	
 	// Returns the current token as a Float //
-	const float FloatToken() {
+	inline const float FloatToken() const {
 		return atof(CurrentToken.c_str());
 	}
 	
 	// Returns the current token as a Float, and steps to the next token //
-	const float StepFloatToken() {
+	inline const float StepFloatToken() {
 		const float Token = FloatToken();
 		NextToken();
 		return Token;
