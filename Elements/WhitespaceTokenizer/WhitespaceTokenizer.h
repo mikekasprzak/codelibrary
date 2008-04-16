@@ -16,19 +16,11 @@ class cWhitespaceTokenizer {
 		
 public:
 	// - -------------------------------------------------------------------------------------- - //
-	inline cWhitespaceTokenizer()
-	{
+	inline cWhitespaceTokenizer() {
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline cWhitespaceTokenizer( const char* FileName )
-	{
-		// Load the contents of FileName in to a string //
-		DataBlock* Block = new_DataBlock( FileName );
-		Data << std::string( (char*)Block->Data, Block->Size );
-		delete_DataBlock( Block );
-		
-		// Process the next (first) line //
-		NextLine();
+	inline cWhitespaceTokenizer( const char* FileName ) {
+		Load( FileName );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline bool Load( const char* FileName ) {
