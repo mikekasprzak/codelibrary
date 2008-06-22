@@ -724,7 +724,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+		Data = Copy( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
 		w = NewWidth;
 		h = NewHeight;
 	}
@@ -796,7 +796,7 @@ public:
 		}		
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+		Data = Copy( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
 		w = NewWidth;
 		h = NewHeight;
 	}
@@ -822,7 +822,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		Data = Copy( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -836,7 +836,7 @@ public:
 
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		Data = Copy( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -855,7 +855,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		Data = Copy( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -881,7 +881,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		Data = Copy( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -895,7 +895,7 @@ public:
 
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		Data = Copy( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -914,7 +914,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		Data = Copy( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
