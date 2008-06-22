@@ -14,6 +14,9 @@ class Grid2D {
 	// Dimensions //
 	size_t w, h;
 	
+	// The value used and retured by the DeadClip functions //
+	tType DeadValue;
+	
 	// Data Array //
 	std::vector< tType > Data;
 	// - -------------------------------------------------------------------------------------- - //
@@ -40,7 +43,19 @@ public:
 		return h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	inline const size_t GetWidth() const {
+		return w;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const size_t GetHeight() const {
+		return h;
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t Size() const {
+		return Data.size();
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const size_t GetSize() const {
 		return Data.size();
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -105,11 +120,79 @@ public:
 		return Data[ (_x + (_y * w)) % Size() ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	
+	// Get the position, aligning to edges //
+	inline tType& Clip( int _x, int _y ) {
+		if ( _x >= w )
+			_x = w - 1;
+		else if ( _x < 0 )
+			_x = 0;
+			
+		if ( _y >= h )
+			_y = h - 1;
+		else if ( _y < 0 )
+			_y = 0;
+			
+		return Data[ (_x + (_y * w)) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const tType& Clip( const size_t _x, const size_t _y ) const {
+		if ( _x >= w )
+			_x = w - 1;
+		else if ( _x < 0 )
+			_x = 0;
+			
+		if ( _y >= h )
+			_y = h - 1;
+		else if ( _y < 0 )
+			_y = 0;
+			
+		return Data[ (_x + (_y * w)) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Commented out because you shouldn't be able to set the DeadClipped value this way //
+	// - -------------------------------------------------------------------------------------- - //
+//	// Get the position, returning the dead value if over //
+//	inline tType& DeadClip( int _x, int _y ) {
+//		if ( _x >= w )
+//			return DeadValue;
+//		else if ( _x < 0 )
+//			return DeadValue;
+//			
+//		if ( _y >= h )
+//			return DeadValue;
+//		else if ( _y < 0 )
+//			return DeadValue;
+//			
+//		return Data[ (_x + (_y * w)) ];
+//	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, returning the dead value if over //
+	inline const tType& DeadClip( const size_t _x, const size_t _y ) const {
+		if ( _x >= w )
+			return DeadValue;
+		else if ( _x < 0 )
+			return DeadValue;
+			
+		if ( _y >= h )
+			return DeadValue;
+		else if ( _y < 0 )
+			return DeadValue;
+			
+		return Data[ (_x + (_y * w)) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Set the value returned/used by dead functions //
+	inline void SetDeadValue( const tType& _Value ) {
+		DeadValue = _Value;	
+	}	
+	// - -------------------------------------------------------------------------------------- - //
 	
 private:
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const std::vector< tType > CopyData(
+	static inline const std::vector< tType > Copy(
 		const Grid2D< tType >& Src,
 		const size_t NewWidth,
 		const size_t NewHeight,
@@ -120,7 +203,7 @@ private:
 		const tType& InitValue = tType()
 		)
 	{
-		std::vector< tType > Copy( NewWidth * NewHeight, InitValue );
+		std::vector< tType > DataCopy( NewWidth * NewHeight, InitValue );
 		
 		size_t CopyWidth = 0;
 		size_t CopyHeight = 0;
@@ -144,12 +227,12 @@ private:
 		// Copy Data //
 		for ( size_t _y = CopyHeight; _y--; ) {
 			for ( size_t _x = CopyWidth; _x--; ) {
-				Copy[DestStartX + _x + ((DestStartY + _y) * NewWidth)] = 
+				DataCopy[DestStartX + _x + ((DestStartY + _y) * NewWidth)] = 
 					Src.Data[SrcStartX + _x + ((SrcStartY + _y) * Src.Width())];
 			}
 		}
 		
-		return Copy;
+		return DataCopy;
 	}	
 	// - -------------------------------------------------------------------------------------- - //
 public:
@@ -511,53 +594,118 @@ public:
 		return RotateCCW( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const Grid2D< tType > FlipX( ) {
+	static inline const Grid2D< tType > FlipX( const Grid2D< tType >& Src ) {
+		Grid2D< tType > NewGrid( Src.Width(), Src.Height() );
+		
+		size_t SrcWidth = Src.Width();
+		size_t SrcHeight = Src.Height();
+		for ( size_t _y = SrcHeight; _y--; ) {
+			for ( size_t _x = SrcWidth; _x--; ) {
+				NewGrid( (SrcWidth-1)-_x, _y ) = Src( _x, _y );
+			}
+		}		
+		
+		return NewGrid;		
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	static inline const Grid2D< tType > FlipY( const Grid2D< tType >& Src ) {
 		Grid2D< tType > NewGrid( Width(), Height() );
 		
 		size_t SrcWidth = Width();
 		size_t SrcHeight = Height();
 		for ( size_t _y = SrcHeight; _y--; ) {
 			for ( size_t _x = SrcWidth; _x--; ) {
-				NewGrid( (SrcWidth-1)-_x, _y ) = operator()( _x, _y );
+				NewGrid( _x, (SrcHeight-1)-_y ) = Src( _x, _y );
 			}
 		}		
 		
 		return NewGrid;		
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D< tType > FlipX( ) {
+		return FlipX( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Grid2D< tType > FlipY( ) {
-		Grid2D< tType > NewGrid( Width(), Height() );
-		
-		size_t SrcWidth = Width();
-		size_t SrcHeight = Height();
-		for ( size_t _y = SrcHeight; _y--; ) {
-			for ( size_t _x = SrcWidth; _x--; ) {
-				NewGrid( _x, (SrcHeight-1)-_y ) = operator()( _x, _y );
-			}
-		}		
-		
-		return NewGrid;		
+		return FlipY( *this );
 	}
-	// - -------------------------------------------------------------------------------------- - //
-	
-	inline const Grid2D< tType > Trim() {
-		size_t x1 = 0;
-		size_t y1 = 0;
-		size_t x2 = w-1;
-		size_t y2 = h-1;
+	// - -------------------------------------------------------------------------------------- - //	
+	inline const Grid2D< tType > Trim( const Grid2D< tType >& Src, const tType& Zero = tType() ) {
+		size_t x1, y1;
+		size_t x2, y2;
 		
 		// Trim the left side //
 		{
 			bool BlockFound = false;
-			for ( size_t _y = Height(); _y--; ) {
-				for ( size_t _x = Width(); _x--; ) {
+			for ( size_t _x = 0; _x < Src.Width(); _x++ ) {
+				x1 = _x;
+				// For every item in the vertical row //
+				for ( size_t _y = Src.Height(); _y--; ) {
+					// Test if it's not our zero //
+					if ( Src( _x, _y ) != Zero )
+						BlockFound = true;
 				}
+				// If a block was found, bail from this //
 				if ( BlockFound )
 					break;
 			}
 		}
 
-		return 
+		// Trim the right side //
+		{
+			bool BlockFound = false;
+			for ( size_t _x = Src.Width() - 1; _x >= 0; _x-- ) {
+				x2 = _x;
+				// For every item in the vertical row //
+				for ( size_t _y = Src.Height(); _y--; ) {
+					// Test if it's not our zero //
+					if ( Src( _x, _y ) != Zero )
+						BlockFound = true;
+				}
+				// If a block was found, bail from this //
+				if ( BlockFound )
+					break;
+			}
+		}
+
+		// Trim the top side //
+		{
+			bool BlockFound = false;
+			for ( size_t _y = 0; _y < Src.Height(); _y++ ) {
+				y1 = _y;
+				// For every item in the vertical row //
+				for ( size_t _x = Src.Width(); _x--; ) {
+					// Test if it's not our zero //
+					if ( Src( _x, _y ) != Zero )
+						BlockFound = true;
+				}
+				// If a block was found, bail from this //
+				if ( BlockFound )
+					break;
+			}
+		}
+
+		// Trim the bottom side //
+		{
+			bool BlockFound = false;
+			for ( size_t _y = Src.Height() - 1; _y >= 0; _y-- ) {
+				y2 = _y;
+				// For every item in the vertical row //
+				for ( size_t _x = Src.Width(); _x--; ) {
+					// Test if it's not our zero //
+					if ( Src( _x, _y ) != Zero )
+						BlockFound = true;
+				}
+				// If a block was found, bail from this //
+				if ( BlockFound )
+					break;
+			}
+		}
+
+		size_t NewWidth = x2 + 1 - x1;
+		size_t NewHeight = y2 + 1 - y1;
+	
+		return Copy( Src, NewWidth, NewHeight, x1, y1, 0, 0 );
 	}
 		
 public:
