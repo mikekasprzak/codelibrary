@@ -43,19 +43,7 @@ public:
 		return h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t GetWidth() const {
-		return w;
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t GetHeight() const {
-		return h;
-	}
-	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t Size() const {
-		return Data.size();
-	}
-	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t GetSize() const {
 		return Data.size();
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -76,16 +64,29 @@ public:
 		return (_x + (_y * w)) % Size();
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const size_t IndexClip( int _x, int _y ) const {
+		if ( _x >= w )
+			_x = w - 1;
+		else if ( _x < 0 )
+			_x = 0;
+			
+		if ( _y >= h )
+			_y = h - 1;
+		else if ( _y < 0 )
+			_y = 0;
+			
+		return Index( _x, _y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
 	
 	// - -------------------------------------------------------------------------------------- - //
 	inline tType& operator () ( const size_t _x, const size_t _y ) {
-		// TODO: Assert out of bounds 
-		return Data[ _x + (_y * w) ];
+		return Data[ Index( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const tType& operator () ( const size_t _x, const size_t _y ) const {
-		// TODO: Assert out of bounds 
-		return Data[ _x + (_y * w) ];
+		return Data[ Index( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline tType& operator [] ( const size_t _Index ) {
@@ -102,52 +103,32 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with axis wrapping //
 	inline tType& Wrap( const size_t _x, const size_t _y ) {
-		return Data[ (_x % w) + ((_y % h) * w) ];
+		return Data[ IndexWrap( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with axis wrapping //
 	inline const tType& Wrap( const size_t _x, const size_t _y ) const {
-		return Data[ (_x % w) + ((_y % h) * w) ];
+		return Data[ IndexWrap( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with next line/first line wrapping //
 	inline tType& NextWrap( const size_t _x, const size_t _y ) {
-		return Data[ (_x + (_y * w)) % Size() ];
+		return Data[ IndexNextWrap( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with next line/first line wrapping //
 	inline const tType& NextWrap( const size_t _x, const size_t _y ) const {
-		return Data[ (_x + (_y * w)) % Size() ];
+		return Data[ IndexNextWrap( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
 	inline tType& Clip( int _x, int _y ) {
-		if ( _x >= w )
-			_x = w - 1;
-		else if ( _x < 0 )
-			_x = 0;
-			
-		if ( _y >= h )
-			_y = h - 1;
-		else if ( _y < 0 )
-			_y = 0;
-			
-		return Data[ (_x + (_y * w)) ];
+		return Data[ IndexClip( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const tType& Clip( const size_t _x, const size_t _y ) const {
-		if ( _x >= w )
-			_x = w - 1;
-		else if ( _x < 0 )
-			_x = 0;
-			
-		if ( _y >= h )
-			_y = h - 1;
-		else if ( _y < 0 )
-			_y = 0;
-			
-		return Data[ (_x + (_y * w)) ];
+	inline const tType& Clip( const size_t _x, const size_t _y ) const {	
+		return Data[ IndexClip( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -181,7 +162,7 @@ public:
 		else if ( _y < 0 )
 			return DeadValue;
 			
-		return Data[ (_x + (_y * w)) ];
+		return Data[ Index( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Set the value returned/used by dead functions //
