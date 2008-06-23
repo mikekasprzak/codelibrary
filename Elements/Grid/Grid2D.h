@@ -1161,6 +1161,55 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "x index" of the first occurence of Value starting at point x,y //
+	inline const int FirstX( int x, int y, const tType& Value ) const {
+		x = ClipX( x );
+		y = ClipY( y );
+		for ( ; x < w; x++ ) {
+			if ( operator()( x, y ) == Value )
+				return x;
+		}
+		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "y index" of the first occurence of Value starting at point x,y //
+	inline const int FirstY( int x, int y, const tType& Value ) const {
+		x = ClipX( x );
+		y = ClipY( y );
+		for ( ; y < h; y++ ) {
+			if ( operator()( x, y ) == Value )
+				return y;
+		}
+		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "x index" of the last occurence of Value starting at point x,y //
+	inline const int LastX( int x, int y, const tType& Value ) const {
+		x = ClipX( x );
+		y = ClipY( y );
+		for ( ; x--; ) {
+			if ( operator()( x, y ) == Value )
+				return x;
+		}
+		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "y index" of the last occurence of Value starting at point x,y //
+	inline const int LastY( int x, int y, const tType& Value ) const {
+		x = ClipX( x );
+		y = ClipY( y );
+		for ( ; y--; ) {
+			if ( operator()( x, y ) == Value )
+				return x;
+		}
+		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_Grid2D_H__ //
