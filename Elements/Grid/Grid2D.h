@@ -1133,6 +1133,34 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+	// - -------------------------------------------------------------------------------------- - //
+	// Count the number of instances of tiles on a line //
+	inline const size_t CountLineX( int y, const tType& Value ) const {
+		size_t CurrentCount = 0;
+		y = ClipY( y );
+
+		for ( int _x = w; _x--; ) {
+			if ( operator()( _x, y ) == Value )
+				CurrentCount++;
+		}
+
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Count the number of instances of tiles on a line //
+	inline const size_t CountLineY( int x, const tType& Value ) const {
+		size_t CurrentCount = 0;
+		x = ClipY( x );
+
+		for ( int _y = h; _y--; ) {
+			if ( operator()( x, _y ) == Value )
+				CurrentCount++;
+		}
+
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_Grid2D_H__ //
