@@ -6,8 +6,6 @@
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Math Functions, Insert (creating rows and columns to fit, X/YAxis Only)
 // - ------------------------------------------------------------------------------------------ - //
-//#include <vector>
-// - ------------------------------------------------------------------------------------------ - //
 template< class tType = int >
 class Grid2D {
 	// - -------------------------------------------------------------------------------------- - //
@@ -15,7 +13,6 @@ class Grid2D {
 	size_t w, h;
 	
 	// Data Array //
-	//std::vector< tType > Data;
 	tType* Data;
 	// - -------------------------------------------------------------------------------------- - //
 public:
@@ -31,7 +28,6 @@ public:
 		w( _w ),
 		h( _h ),
 		Data( new tType[w*h] )
-		//Data( w * h, Type )
 	{
 		FillData(Type);
 	}
@@ -50,7 +46,6 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t Size() const {
-		//return Data.size();
 		return w * h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -182,7 +177,6 @@ private:
 		const tType& InitValue = tType()
 		)
 	{
-		//std::vector< tType > DataCopy( NewWidth * NewHeight, InitValue );
 		tType* DataCopy = new tType[ NewWidth * NewHeight ]( InitValue );
 		
 		size_t CopyWidth = 0;
