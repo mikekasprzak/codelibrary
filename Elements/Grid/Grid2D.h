@@ -14,9 +14,6 @@ class Grid2D {
 	// Dimensions //
 	size_t w, h;
 	
-	// The value used and retured by the DeadClip functions //
-	tType DeadValue;
-	
 	// Data Array //
 	std::vector< tType > Data;
 	// - -------------------------------------------------------------------------------------- - //
@@ -133,25 +130,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	// Commented out because you shouldn't be able to set the DeadClipped value this way //
-	// - -------------------------------------------------------------------------------------- - //
-//	// Get the position, returning the dead value if over //
-//	inline tType& DeadClip( int _x, int _y ) {
-//		if ( _x >= w )
-//			return DeadValue;
-//		else if ( _x < 0 )
-//			return DeadValue;
-//			
-//		if ( _y >= h )
-//			return DeadValue;
-//		else if ( _y < 0 )
-//			return DeadValue;
-//			
-//		return Data[ (_x + (_y * w)) ];
-//	}
-	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, returning the dead value if over //
-	inline const tType& DeadClip( const size_t _x, const size_t _y ) const {
+	inline const tType& DeadClip( const size_t _x, const size_t _y, const tType& DeadValue = tType() ) const {
 		if ( _x >= w )
 			return DeadValue;
 		else if ( _x < 0 )
@@ -164,11 +144,6 @@ public:
 			
 		return Data[ Index( _x, _y ) ];
 	}
-	// - -------------------------------------------------------------------------------------- - //
-	// Set the value returned/used by dead functions //
-	inline void SetDeadValue( const tType& _Value ) {
-		DeadValue = _Value;	
-	}	
 	// - -------------------------------------------------------------------------------------- - //
 	
 private:
