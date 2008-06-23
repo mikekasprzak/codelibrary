@@ -173,7 +173,7 @@ public:
 	
 private:
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const std::vector< tType > Copy(
+	static inline const std::vector< tType > CopyData(
 		const Grid2D< tType >& Src,
 		const size_t NewWidth,
 		const size_t NewHeight,
@@ -215,6 +215,26 @@ private:
 		
 		return DataCopy;
 	}	
+	// - -------------------------------------------------------------------------------------- - //
+	static inline const Grid2D< tType > Copy(
+		const Grid2D< tType >& Src,
+		const size_t NewWidth,
+		const size_t NewHeight,
+		const int SrcStartX,
+		const int SrcStartY,
+		const int DestStartX,
+		const int DestStartY,
+		const tType& InitValue = tType()
+		)
+	{
+		Grid2D< tType > NewGrid;
+		
+		NewGrid.Data = CopyData( Src, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+		NewGrid.w = NewWidth;
+		NewGrid.h = NewHeight;
+		
+		return NewGrid;
+	}
 	// - -------------------------------------------------------------------------------------- - //
 public:
 	static inline const Grid2D< tType > Merge(
@@ -724,7 +744,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = Copy( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+		Data = CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
 		w = NewWidth;
 		h = NewHeight;
 	}
@@ -796,7 +816,7 @@ public:
 		}		
 		
 		// Copy the data and set the new dimensions //
-		Data = Copy( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+		Data = CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
 		w = NewWidth;
 		h = NewHeight;
 	}
@@ -822,7 +842,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = Copy( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -836,7 +856,7 @@ public:
 
 		
 		// Copy the data and set the new dimensions //
-		Data = Copy( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -855,7 +875,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = Copy( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -881,7 +901,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = Copy( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -895,7 +915,7 @@ public:
 
 		
 		// Copy the data and set the new dimensions //
-		Data = Copy( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -914,7 +934,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = Copy( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
