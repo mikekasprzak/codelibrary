@@ -6,7 +6,7 @@
 // - ------------------------------------------------------------------------------------------ - //
 // TODO: Math Functions, Insert (creating rows and columns to fit, X/YAxis Only)
 // - ------------------------------------------------------------------------------------------ - //
-#include <vector>
+//#include <vector>
 // - ------------------------------------------------------------------------------------------ - //
 template< class tType = int >
 class Grid2D {
@@ -15,21 +15,30 @@ class Grid2D {
 	size_t w, h;
 	
 	// Data Array //
-	std::vector< tType > Data;
+	//std::vector< tType > Data;
+	tType* Data;
 	// - -------------------------------------------------------------------------------------- - //
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline Grid2D() :
 		w( 0 ),
-		h( 0 )
+		h( 0 ),
+		Data( 0 )
 	{
 	}
 
 	inline Grid2D( const size_t _w, const size_t _h, const tType& Type = tType() ) :
 		w( _w ),
 		h( _h ),
-		Data( w * h, Type )
+		Data( new tType[w*h] )
+		//Data( w * h, Type )
 	{
+		FillData(Type);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline ~Grid2D() {
+		if ( Data )
+			delete [] Data;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t Width() const {
@@ -41,7 +50,21 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t Size() const {
-		return Data.size();
+		//return Data.size();
+		return w * h;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void FillData( const tType& Value = tType() ) {
+		for ( size_t idx = Size(); idx--; ) {
+			Data[ idx ] = Value;
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void SetData( const tType* NewData ) {
+		if ( Data )
+			delete [] Data;
+			
+		Data = NewData;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -148,7 +171,7 @@ public:
 	
 private:
 	// - -------------------------------------------------------------------------------------- - //
-	static inline const std::vector< tType > CopyData(
+	static inline tType* CopyData(
 		const Grid2D< tType >& Src,
 		const size_t NewWidth,
 		const size_t NewHeight,
@@ -159,7 +182,8 @@ private:
 		const tType& InitValue = tType()
 		)
 	{
-		std::vector< tType > DataCopy( NewWidth * NewHeight, InitValue );
+		//std::vector< tType > DataCopy( NewWidth * NewHeight, InitValue );
+		tType* DataCopy = new tType[ NewWidth * NewHeight ]( InitValue );
 		
 		size_t CopyWidth = 0;
 		size_t CopyHeight = 0;
@@ -204,7 +228,7 @@ private:
 	{
 		Grid2D< tType > NewGrid;
 		
-		NewGrid.Data = CopyData( Src, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+		NewGrid.SetData( CopyData( Src, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
 		NewGrid.w = NewWidth;
 		NewGrid.h = NewHeight;
 		
@@ -253,7 +277,7 @@ public:
 		int BX = GridBX - GridX1;
 		int BY = GridBY - GridY1;
 			
-		// Create a vector to hold our copy //
+		// Create a Grid to hold our copy //
 		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
@@ -316,7 +340,7 @@ public:
 		int BX = GridBX - GridX1;
 		int BY = GridBY - GridY1;
 			
-		// Create a vector to hold our copy //
+		// Create a Grid to hold our copy //
 		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
@@ -381,7 +405,7 @@ public:
 		int BX = GridBX - GridX1;
 		int BY = GridBY - GridY1;
 			
-		// Create a vector to hold our copy //
+		// Create a Grid to hold our copy //
 		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
@@ -447,7 +471,7 @@ public:
 		int BX = GridBX - GridX1;
 		int BY = GridBY - GridY1;
 			
-		// Create a vector to hold our copy //
+		// Create a Grid to hold our copy //
 		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
@@ -513,7 +537,7 @@ public:
 		int BX = GridBX - GridX1;
 		int BY = GridBY - GridY1;
 			
-		// Create a vector to hold our copy //
+		// Create a Grid to hold our copy //
 		Grid2D< tType > NewGrid( Width, Height, InitValue );
 
 		// Copy GridA //
@@ -719,7 +743,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+		SetData( CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
 		w = NewWidth;
 		h = NewHeight;
 	}
@@ -791,7 +815,7 @@ public:
 		}		
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue );
+		SetData( CopyData( *this, NewWidth, NewHeight, SrcStartX, SrcStartY, DestStartX, DestStartY, InitValue ) );
 		w = NewWidth;
 		h = NewHeight;
 	}
@@ -817,7 +841,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		SetData( CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue ) );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -831,7 +855,7 @@ public:
 
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		SetData( CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue ) );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -850,7 +874,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue );
+		SetData( CopyData( *this, NewWidth, h, SrcStart, 0, DestStart, 0, InitValue ) );
 		w = NewWidth;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -876,7 +900,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		SetData( CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -890,7 +914,7 @@ public:
 
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		SetData( CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -909,7 +933,7 @@ public:
 		}
 		
 		// Copy the data and set the new dimensions //
-		Data = CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue );
+		SetData( CopyData( *this, w, NewHeight, 0, SrcStart, 0, DestStart, InitValue ) );
 		h = NewHeight;
 	}
 	// - -------------------------------------------------------------------------------------- - //
