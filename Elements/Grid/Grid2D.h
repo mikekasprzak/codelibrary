@@ -729,83 +729,175 @@ public:
 		return FlipY( *this );
 	}
 	// - -------------------------------------------------------------------------------------- - //	
-	inline const Grid2D< tType > Trim( const Grid2D< tType >& Src, const tType& Zero = tType() ) {
-		size_t x1, y1;
-		size_t x2, y2;
+
+	// - -------------------------------------------------------------------------------------- - //	
+	inline const size_t TrimX1( const tType& Zero = tType() ) const {
+		size_t x1 = 0;
 		
-		// Trim the left side //
-		{
-			bool BlockFound = false;
-			for ( size_t _x = 0; _x < Src.Width(); _x++ ) {
-				x1 = _x;
-				// For every item in the vertical row //
-				for ( size_t _y = Src.Height(); _y--; ) {
-					// Test if it's not our zero //
-					if ( Src( _x, _y ) != Zero )
-						BlockFound = true;
-				}
-				// If a block was found, bail from this //
-				if ( BlockFound )
-					break;
+		bool BlockFound = false;
+		for ( size_t _x = 0; _x < Width(); _x++ ) {
+			x1 = _x;
+			// For every item in the vertical row //
+			for ( size_t _y = Height(); _y--; ) {
+				// Test if it's not our zero //
+				if ( operator()( _x, _y ) != Zero )
+					BlockFound = true;
 			}
+			// If a block was found, bail from this //
+			if ( BlockFound )
+				break;
 		}
-
-		// Trim the right side //
-		{
-			bool BlockFound = false;
-			for ( size_t _x = Src.Width() - 1; _x >= 0; _x-- ) {
-				x2 = _x;
-				// For every item in the vertical row //
-				for ( size_t _y = Src.Height(); _y--; ) {
-					// Test if it's not our zero //
-					if ( Src( _x, _y ) != Zero )
-						BlockFound = true;
-				}
-				// If a block was found, bail from this //
-				if ( BlockFound )
-					break;
+		
+		return x1;
+	}
+	// - -------------------------------------------------------------------------------------- - //	
+	inline const size_t TrimY1( const tType& Zero = tType() ) const {
+		size_t y1 = 0;
+		
+		bool BlockFound = false;
+		for ( size_t _y = 0; _y < Height(); _y++ ) {
+			y1 = _y;
+			// For every item in the vertical row //
+			for ( size_t _x = Width(); _x--; ) {
+				// Test if it's not our zero //
+				if ( operator()( _x, _y ) != Zero )
+					BlockFound = true;
 			}
+			// If a block was found, bail from this //
+			if ( BlockFound )
+				break;
 		}
-
-		// Trim the top side //
-		{
-			bool BlockFound = false;
-			for ( size_t _y = 0; _y < Src.Height(); _y++ ) {
-				y1 = _y;
-				// For every item in the vertical row //
-				for ( size_t _x = Src.Width(); _x--; ) {
-					// Test if it's not our zero //
-					if ( Src( _x, _y ) != Zero )
-						BlockFound = true;
-				}
-				// If a block was found, bail from this //
-				if ( BlockFound )
-					break;
+		
+		return y1;
+	}
+	// - -------------------------------------------------------------------------------------- - //	
+	inline const size_t TrimX2( const tType& Zero = tType() ) const {
+		size_t x2 = 0;
+		
+		bool BlockFound = false;
+		for ( size_t _x = Width() - 1; _x >= 0; _x-- ) {
+			x2 = _x;
+			// For every item in the vertical row //
+			for ( size_t _y = Height(); _y--; ) {
+				// Test if it's not our zero //
+				if ( operator()( _x, _y ) != Zero )
+					BlockFound = true;
 			}
+			// If a block was found, bail from this //
+			if ( BlockFound )
+				break;
 		}
-
-		// Trim the bottom side //
-		{
-			bool BlockFound = false;
-			for ( size_t _y = Src.Height() - 1; _y >= 0; _y-- ) {
-				y2 = _y;
-				// For every item in the vertical row //
-				for ( size_t _x = Src.Width(); _x--; ) {
-					// Test if it's not our zero //
-					if ( Src( _x, _y ) != Zero )
-						BlockFound = true;
-				}
-				// If a block was found, bail from this //
-				if ( BlockFound )
-					break;
+		
+		return x2;
+	}
+	// - -------------------------------------------------------------------------------------- - //	
+	inline const size_t TrimY2( const tType& Zero = tType() ) const {
+		size_t y2 = 0;
+		
+		bool BlockFound = false;
+		for ( size_t _y = Height() - 1; _y >= 0; _y-- ) {
+			y2 = _y;
+			// For every item in the vertical row //
+			for ( size_t _x = Width(); _x--; ) {
+				// Test if it's not our zero //
+				if ( operator()( _x, _y ) != Zero )
+					BlockFound = true;
 			}
+			// If a block was found, bail from this //
+			if ( BlockFound )
+				break;
 		}
+		
+		return y2;
+	}
+	// - -------------------------------------------------------------------------------------- - //	
+	static inline const Grid2D< tType > Trim( const Grid2D< tType >& Src, const tType& Zero = tType() ) {
+		size_t x1 = Src.TrimX1();
+		size_t y1 = Src.TrimY1();
+		size_t x2 = Src.TrimX2();
+		size_t y2 = Src.TrimY2();
+		
+//		size_t x1, y1;
+//		size_t x2, y2;
+//		
+//		// Trim the left side //
+//		{
+//			bool BlockFound = false;
+//			for ( size_t _x = 0; _x < Src.Width(); _x++ ) {
+//				x1 = _x;
+//				// For every item in the vertical row //
+//				for ( size_t _y = Src.Height(); _y--; ) {
+//					// Test if it's not our zero //
+//					if ( Src( _x, _y ) != Zero )
+//						BlockFound = true;
+//				}
+//				// If a block was found, bail from this //
+//				if ( BlockFound )
+//					break;
+//			}
+//		}
+//
+//		// Trim the right side //
+//		{
+//			bool BlockFound = false;
+//			for ( size_t _x = Src.Width() - 1; _x >= 0; _x-- ) {
+//				x2 = _x;
+//				// For every item in the vertical row //
+//				for ( size_t _y = Src.Height(); _y--; ) {
+//					// Test if it's not our zero //
+//					if ( Src( _x, _y ) != Zero )
+//						BlockFound = true;
+//				}
+//				// If a block was found, bail from this //
+//				if ( BlockFound )
+//					break;
+//			}
+//		}
+//
+//		// Trim the top side //
+//		{
+//			bool BlockFound = false;
+//			for ( size_t _y = 0; _y < Src.Height(); _y++ ) {
+//				y1 = _y;
+//				// For every item in the vertical row //
+//				for ( size_t _x = Src.Width(); _x--; ) {
+//					// Test if it's not our zero //
+//					if ( Src( _x, _y ) != Zero )
+//						BlockFound = true;
+//				}
+//				// If a block was found, bail from this //
+//				if ( BlockFound )
+//					break;
+//			}
+//		}
+//
+//		// Trim the bottom side //
+//		{
+//			bool BlockFound = false;
+//			for ( size_t _y = Src.Height() - 1; _y >= 0; _y-- ) {
+//				y2 = _y;
+//				// For every item in the vertical row //
+//				for ( size_t _x = Src.Width(); _x--; ) {
+//					// Test if it's not our zero //
+//					if ( Src( _x, _y ) != Zero )
+//						BlockFound = true;
+//				}
+//				// If a block was found, bail from this //
+//				if ( BlockFound )
+//					break;
+//			}
+//		}
 
 		size_t NewWidth = x2 + 1 - x1;
 		size_t NewHeight = y2 + 1 - y1;
 	
 		return Copy( Src, NewWidth, NewHeight, x1, y1, 0, 0 );
 	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D< tType > Trim( const tType& Zero = tType() ) {
+		return Trim( *this, Zero );
+	}
+	// - -------------------------------------------------------------------------------------- - //
 		
 public:
 	// - -------------------------------------------------------------------------------------- - //
