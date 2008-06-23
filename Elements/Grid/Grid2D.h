@@ -1039,7 +1039,7 @@ public:
 public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of instances of a value //
-	inline const size_t Count( const tType& Value ) {
+	inline const size_t Count( const tType& Value ) const {
 		size_t CurrentCount = 0;
 
 		for ( size_t _y = Height(); _y--; ) {
@@ -1053,7 +1053,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the number of non instances of a value //
-	inline const size_t CountNot( const tType& Value ) {
+	inline const size_t CountNot( const tType& Value ) const {
 		size_t CurrentCount = 0;
 
 		for ( size_t _y = Height(); _y--; ) {
@@ -1069,7 +1069,7 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
-	inline const size_t CountAdjacentX( int x, int y ) {
+	inline const size_t CountAdjacentX( int x, int y ) const {
 		size_t CurrentCount = 1;
 		x = ClipX( x );
 		y = ClipY( y );
@@ -1093,7 +1093,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
-	inline const size_t CountAdjacentY( int x, int y ) {
+	inline const size_t CountAdjacentY( int x, int y ) const {
 		size_t CurrentCount = 1;
 		x = ClipX( x );
 		y = ClipY( y );
@@ -1114,6 +1114,22 @@ public:
 		}
 		
 		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Count the number of instances of tiles equal to the tile we point to. //
+	inline const size_t CountAdjacentX( int x, int y, const tType& Value ) const  {
+		if ( Clip( x, y ) != Value )
+			return 0;
+		else
+			return CountAdjacentX( x, y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Count the number of instances of tiles equal to the tile we point to. //
+	inline const size_t CountAdjacentY( int x, int y, const tType& Value ) const {
+		if ( Clip( x, y ) != Value )
+			return 0;
+		else
+			return CountAdjacentY( x, y );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
