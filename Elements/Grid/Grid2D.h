@@ -104,11 +104,11 @@ public:
 		return _x + (_y * w);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexWrap( const size_t _x, const size_t _y ) const {
+	inline const size_t IndexWrap( const int _x, const int _y ) const {
 		return (_x % w) + ((_y % h) * w);
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t IndexNextWrap( const size_t _x, const size_t _y ) const {
+	inline const size_t IndexNextWrap( const int _x, const int _y ) const {
 		return (_x + (_y * w)) % Size();
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -119,6 +119,26 @@ public:
 		else if ( _x < 0 )
 			_x = 0;
 			
+		if ( _y >= h )
+			_y = h - 1;
+		else if ( _y < 0 )
+			_y = 0;
+			
+		return Index( _x, _y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const size_t IndexClipX( int _x, int _y ) const {
+		if ( _x >= w )
+			_x = w - 1;
+		else if ( _x < 0 )
+			_x = 0;
+			
+		return Index( _x, _y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const size_t IndexClipY( int _x, int _y ) const {
 		if ( _y >= h )
 			_y = h - 1;
 		else if ( _y < 0 )
@@ -150,22 +170,22 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with axis wrapping //
-	inline tType& Wrap( const size_t _x, const size_t _y ) {
+	inline tType& Wrap( const int _x, const int _y ) {
 		return Data[ IndexWrap( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with axis wrapping //
-	inline const tType& Wrap( const size_t _x, const size_t _y ) const {
+	inline const tType& Wrap( const int _x, const int _y ) const {
 		return Data[ IndexWrap( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with next line/first line wrapping //
-	inline tType& NextWrap( const size_t _x, const size_t _y ) {
+	inline tType& NextWrap( const int _x, const int _y ) {
 		return Data[ IndexNextWrap( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with next line/first line wrapping //
-	inline const tType& NextWrap( const size_t _x, const size_t _y ) const {
+	inline const tType& NextWrap( const int _x, const int _y ) const {
 		return Data[ IndexNextWrap( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -175,10 +195,61 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const tType& Clip( const size_t _x, const size_t _y ) const {	
+	inline const tType& Clip( const int _x, const int _y ) const {	
 		return Data[ IndexClip( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline tType& ClipX( int _x, int _y ) {
+		return Data[ IndexClipX( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const tType& ClipX( const int _x, const int _y ) const {	
+		return Data[ IndexClipX( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline tType& ClipY( int _x, int _y ) {
+		return Data[ IndexClipY( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const tType& ClipY( const int _x, const int _y ) const {	
+		return Data[ IndexClipY( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const size_t ClipX( int _x ) const {
+		if ( _x >= w )
+			_x = w - 1;
+		else if ( _x < 0 )
+			_x = 0;
+			
+		return _x;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, aligning to edges //
+	inline const size_t ClipY( int _y ) const {
+		if ( _y >= h )
+			_y = h - 1;
+		else if ( _y < 0 )
+			_y = 0;
+			
+		return _y;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const size_t WrapX( const int _x ) const {
+		return (_x % w);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const size_t WrapY( const int _y ) const {
+		return (_y % h);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, returning the dead value if over //
@@ -973,7 +1044,7 @@ public:
 
 		for ( size_t _y = Height(); _y--; ) {
 			for ( size_t _x = Width(); _x--; ) {
-				if ( *this( _x, _y ) == Value )
+				if ( operator()( _x, _y ) == Value )
 					CurrentCount++;
 			}
 		}	
@@ -987,7 +1058,7 @@ public:
 
 		for ( size_t _y = Height(); _y--; ) {
 			for ( size_t _x = Width(); _x--; ) {
-				if ( *this( _x, _y ) != Value )
+				if ( operator()( _x, _y ) != Value )
 					CurrentCount++;
 			}
 		}	
@@ -995,6 +1066,33 @@ public:
 		return CurrentCount;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the number of instances of an equal value to the  //
+	inline const size_t CountAdjacentX( int x, int y ) {
+		size_t CurrentCount = 1;
+		x = ClipX( x );
+		y = ClipY( y );
+		tType Value = operator()( x, y );
+
+		for ( int _x = x; _x-- > 0; ) {
+			if ( operator()( _x, y ) == Value )
+				CurrentCount++;
+			else
+				break;
+		}
+
+		for ( int _x = x; ++_x < w; ) {
+			if ( operator()( _x, y ) == Value )
+				CurrentCount++;
+			else
+				break;
+		}
+		
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_Grid2D_H__ //
