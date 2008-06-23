@@ -1369,6 +1369,26 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+	// - -------------------------------------------------------------------------------------- - //
+	// In the case of rows and columns, an Adjacency Grid is exactly the same as a Distance Grid //
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y, const tType& Value ) const {
+		return GenerateAdjacentXAdjacencyGrid( x, y, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y, const tType& Value ) const {
+		return GenerateAdjacentYAdjacencyGrid( x, y, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D<int> GenerateAdjacentXDistanceGrid( const int x, const int y ) const {
+		return GenerateAdjacentXAdjacencyGrid( x, y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D<int> GenerateAdjacentYDistanceGrid( const int x, const int y ) const {
+		return GenerateAdjacentYAdjacencyGrid( x, y );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_Grid2D_H__ //
