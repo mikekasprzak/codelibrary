@@ -1251,6 +1251,52 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// Return the "x index" of the first non occurence of Value starting at point x,y //
+	inline const int FirstNotX( int x, int y, const tType& Value ) const {
+		x = ClipX( x );
+		y = ClipY( y );
+		for ( ; x < w; x++ ) {
+			if ( operator()( x, y ) != Value )
+				return x;
+		}
+		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "y index" of the first non occurence of Value starting at point x,y //
+	inline const int FirstNotY( int x, int y, const tType& Value ) const {
+		x = ClipX( x );
+		y = ClipY( y );
+		for ( ; y < h; y++ ) {
+			if ( operator()( x, y ) != Value )
+				return y;
+		}
+		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "x index" of the last non occurence of Value starting at point x,y //
+	inline const int LastNotX( int x, int y, const tType& Value ) const {
+		x = ClipX( x );
+		y = ClipY( y );
+		for ( ; x--; ) {
+			if ( operator()( x, y ) != Value )
+				return x;
+		}
+		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "y index" of the last non occurence of Value starting at point x,y //
+	inline const int LastNotY( int x, int y, const tType& Value ) const {
+		x = ClipX( x );
+		y = ClipY( y );
+		for ( ; y--; ) {
+			if ( operator()( x, y ) != Value )
+				return x;
+		}
+		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 	// NOTE: Should these be called FirstXOnLine(), etc?
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the first occurence of Value on a line //
@@ -1273,6 +1319,30 @@ public:
 	inline const int LastLineY( int x, const tType& Value ) const {
 		// NOTE: 'cause LastY does clipping, you could technically pass h directly //
 		return LastY( x, h - 1, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "x index" of the first occurence of not Value on a line //
+	inline const int FirstLineNotX( int y, const tType& Value ) const {
+		return FirstNotX( 0, y, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "y index" of the first occurence of not Value on a line //
+	inline const int FirstLineNotY( int x, const tType& Value ) const {
+		return FirstNotY( x, 0, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "x index" of the last occurence of not Value on a line //
+	inline const int LastLineNotX( int y, const tType& Value ) const {
+		// NOTE: 'cause LastX does clipping, you could technically pass w directly // 
+		return LastNotX( w - 1, y, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "y index" of the last occurence of not Value on a line //
+	inline const int LastLineNotY( int x, const tType& Value ) const {
+		// NOTE: 'cause LastY does clipping, you could technically pass h directly //
+		return LastNotY( x, h - 1, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
