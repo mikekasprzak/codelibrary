@@ -29,7 +29,7 @@ public:
 		h( _h ),
 		Data( new tType[w*h] )
 	{
-		FillData(Type);
+		Fill(Type);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline Grid2D( const Grid2D<tType>& Copy ) :
@@ -78,16 +78,17 @@ public:
 		return w * h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	static inline void FillData( tType* Dest, const size_t Size, const tType& Value = tType() ) {
+	static inline void Fill( tType* Dest, const size_t Size, const tType& Value = tType() ) {
 		for ( size_t idx = Size; idx--; ) {
 			Dest[ idx ] = Value;
 		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void FillData( const tType& Value = tType() ) {
-		FillData( Data, Size(), Value );
+	inline void Fill( const tType& Value = tType() ) {
+		Fill( Data, Size(), Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Used Internally to explicitly change the Data pointer //
 	inline void SetData( tType* NewData ) {
 		if ( Data )
 			delete [] Data;
@@ -106,6 +107,14 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t IndexWrap( const int _x, const int _y ) const {
 		return (_x % w) + ((_y % h) * w);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const size_t IndexWrapX( const int _x, const int _y ) const {
+		return (_x % w) + ((_y) * w);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const size_t IndexWrapY( const int _x, const int _y ) const {
+		return (_x) + ((_y % h) * w);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t IndexNextWrap( const int _x, const int _y ) const {
@@ -177,6 +186,26 @@ public:
 	// Get the position, with axis wrapping //
 	inline const tType& Wrap( const int _x, const int _y ) const {
 		return Data[ IndexWrap( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline tType& WrapX( const int _x, const int _y ) {
+		return Data[ IndexWrapX( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline const tType& WrapX( const int _x, const int _y ) const {
+		return Data[ IndexWrapX( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline tType& WrapY( const int _x, const int _y ) {
+		return Data[ IndexWrapY( _x, _y ) ];
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Get the position, with axis wrapping //
+	inline const tType& WrapY( const int _x, const int _y ) const {
+		return Data[ IndexWrapY( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, with next line/first line wrapping //
@@ -282,7 +311,7 @@ private:
 		)
 	{
 		tType* DataCopy = new tType[ NewWidth * NewHeight ];
-		FillData( DataCopy, NewWidth * NewHeight, InitValue );
+		Fill( DataCopy, NewWidth * NewHeight, InitValue );
 		
 		size_t CopyWidth = 0;
 		size_t CopyHeight = 0;
@@ -1251,6 +1280,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// NOTE: The "Not" may be confusing, since it's Not Equality, not Not X (i.e. Y). //
+	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the first non occurence of Value starting at point x,y //
 	inline const int FirstNotX( int x, int y, const tType& Value ) const {
 		x = ClipX( x );
@@ -1322,6 +1353,8 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+	// - -------------------------------------------------------------------------------------- - //
+	// NOTE: The "Not" may be confusing, since it's Not Equality, not Not X (i.e. Y). //
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the first occurence of not Value on a line //
 	inline const int FirstLineNotX( int y, const tType& Value ) const {
