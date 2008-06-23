@@ -49,10 +49,14 @@ public:
 		return w * h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void FillData( const tType& Value = tType() ) {
-		for ( size_t idx = Size(); idx--; ) {
-			Data[ idx ] = Value;
+	static inline void FillData( tType* Dest, const size_t Size, const tType& Value = tType() ) {
+		for ( size_t idx = Size; idx--; ) {
+			Dest[ idx ] = Value;
 		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void FillData( const tType& Value = tType() ) {
+		FillData( Data, Size(), Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline void SetData( const tType* NewData ) {
@@ -177,7 +181,8 @@ private:
 		const tType& InitValue = tType()
 		)
 	{
-		tType* DataCopy = new tType[ NewWidth * NewHeight ]( InitValue );
+		tType* DataCopy = new tType[ NewWidth * NewHeight ];
+		FillData( DataCopy, NewWidth * NewHeight, InitValue );
 		
 		size_t CopyWidth = 0;
 		size_t CopyHeight = 0;
