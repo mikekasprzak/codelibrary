@@ -832,10 +832,16 @@ public:
 	// NOTE: This function might not be needed, but was easy enough to write after all //
 	// - -------------------------------------------------------------------------------------- - //	
 	static inline const Grid2D< tType > Crop( const Grid2D< tType >& Src, const size_t x1, const size_t y1, const size_t x2, const size_t y2 ) {
-		size_t NewWidth = ClipX( x2 ) + 1 - ClipX( x1 );
-		size_t NewHeight = ClipY( y2 ) + 1 - ClipY( y1 );
+		size_t NewWidth = Src.ClipX( x2 ) + 1 - Src.ClipX( x1 );
+		size_t NewHeight = Src.ClipY( y2 ) + 1 - Src.ClipY( y1 );
+		
+		if ( x2 < x1 )
+			NewWidth = 1;
+		
+		if ( y2 < y1 )
+			NewHeight = 1; 
 	
-		return Copy( Src, NewWidth, NewHeight, ClipX( x1 ), ClipY( y1 ), 0, 0 );
+		return Copy( Src, NewWidth, NewHeight, Src.ClipX( x1 ), Src.ClipY( y1 ), 0, 0 );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const Grid2D< tType > Crop( const size_t x1, const size_t y1, const size_t x2, const size_t y2 ) {	
