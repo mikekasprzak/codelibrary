@@ -31,6 +31,33 @@ public:
 	{
 		FillData(Type);
 	}
+	
+	inline Grid2D( const Grid2D<tType>& Copy ) :
+		w( Copy.w ),
+		h( Copy.h ),
+		Data( new tType[w*h] )
+	{
+		for ( size_t idx = w*h; idx--; ) {
+			Data[ idx ] = Copy.Data[ idx ];
+		}
+	}
+	
+	inline Grid2D<tType>& operator = (const Grid2D<tType>& Copy) {
+		if ( this != &Copy ) {
+			if ( Data )
+				delete [] Data;
+			
+			w = Copy.w;
+			h = Copy.h;
+			
+			Data = new tType[ w*h ];
+			for ( size_t idx = w*h; idx--; ) {
+				Data[ idx ] = Copy.Data[ idx ];
+			}
+		}
+		
+		return *this;
+	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline ~Grid2D() {
 		if ( Data )
@@ -59,7 +86,7 @@ public:
 		FillData( Data, Size(), Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void SetData( const tType* NewData ) {
+	inline void SetData( tType* NewData ) {
 		if ( Data )
 			delete [] Data;
 			
