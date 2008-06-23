@@ -1185,8 +1185,6 @@ public:
 		return -1;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-
-	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the last occurence of Value starting at point x,y //
 	inline const int LastX( int x, int y, const tType& Value ) const {
 		x = ClipX( x );
@@ -1207,6 +1205,32 @@ public:
 				return x;
 		}
 		return -1;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// NOTE: Should these be called FirstXOnLine(), etc?
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "x index" of the first occurence of Value on a line //
+	inline const int FirstLineX( int y, const tType& Value ) const {
+		return FirstX( 0, y, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "y index" of the first occurence of Value on a line //
+	inline const int FirstLineY( int x, const tType& Value ) const {
+		return FirstY( x, 0, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "x index" of the last occurence of Value on a line //
+	inline const int LastLineX( int y, const tType& Value ) const {
+		// NOTE: 'cause LastX does clipping, you could technically pass w directly // 
+		return LastX( w - 1, y, Value );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the "y index" of the last occurence of Value on a line //
+	inline const int LastLineY( int x, const tType& Value ) const {
+		// NOTE: 'cause LastY does clipping, you could technically pass h directly //
+		return LastY( x, h - 1, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
