@@ -826,6 +826,21 @@ public:
 	inline const Grid2D< tType > Trim( const tType& Zero = tType() ) {
 		return Trim( *this, Zero );
 	}
+	// - -------------------------------------------------------------------------------------- - //	
+
+	// - -------------------------------------------------------------------------------------- - //	
+	// NOTE: This function might not be needed, but was easy enough to write after all //
+	// - -------------------------------------------------------------------------------------- - //	
+	static inline const Grid2D< tType > Crop( const Grid2D< tType >& Src, const size_t x1, const size_t y1, const size_t x2, const size_t y2 ) {
+		size_t NewWidth = ClipX( x2 ) + 1 - ClipX( x1 );
+		size_t NewHeight = ClipY( y2 ) + 1 - ClipY( y1 );
+	
+		return Copy( Src, NewWidth, NewHeight, ClipX( x1 ), ClipY( y1 ), 0, 0 );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D< tType > Crop( const size_t x1, const size_t y1, const size_t x2, const size_t y2 ) {	
+		return Crop( *this, x1, y1, x2, y2 );
+	}
 	// - -------------------------------------------------------------------------------------- - //
 		
 public:
