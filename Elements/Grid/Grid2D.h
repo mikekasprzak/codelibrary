@@ -1068,7 +1068,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	// Return the number of instances of an equal value to the  //
+	// Count the number of instances of tiles equal to the tile we point to. //
 	inline const size_t CountAdjacentX( int x, int y ) {
 		size_t CurrentCount = 1;
 		x = ClipX( x );
@@ -1084,6 +1084,30 @@ public:
 
 		for ( int _x = x; ++_x < w; ) {
 			if ( operator()( _x, y ) == Value )
+				CurrentCount++;
+			else
+				break;
+		}
+		
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Count the number of instances of tiles equal to the tile we point to. //
+	inline const size_t CountAdjacentY( int x, int y ) {
+		size_t CurrentCount = 1;
+		x = ClipX( x );
+		y = ClipY( y );
+		tType Value = operator()( x, y );
+
+		for ( int _y = y; _y-- > 0; ) {
+			if ( operator()( x, _y ) == Value )
+				CurrentCount++;
+			else
+				break;
+		}
+
+		for ( int _y = y; ++_y < h; ) {
+			if ( operator()( x, _y ) == Value )
 				CurrentCount++;
 			else
 				break;
