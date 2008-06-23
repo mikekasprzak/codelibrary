@@ -1234,6 +1234,99 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+public:
+	// - -------------------------------------------------------------------------------------- - //
+	// Generate a grid of values for how far away each found value is from the start //
+	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( int x, int y, const tType& Value ) const {
+		Grid2D<int> NewGrid( w, h );
+		
+		x = ClipX( x );
+		y = ClipY( y );
+		
+		if ( operator()( x, y ) != Value )
+			return NewGrid;
+		
+		NewGrid( x, y ) = 1;
+		
+		{
+			size_t Distance = 1;
+			for ( int _x = x; _x-- > 0; ) {
+				if ( operator()( _x, y ) == Value ) {
+					Distance++;
+					
+					NewGrid( _x, y ) = Distance;
+				}
+				else
+					break;
+			}
+		}
+
+		{
+			size_t Distance = 1;
+			for ( int _x = x; ++_x < w; ) {
+				if ( operator()( _x, y ) == Value ) {
+					Distance++;
+					
+					NewGrid( _x, y ) = Distance;
+				}
+				else
+					break;
+			}
+		}
+		
+		return NewGrid;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Generate a grid of values for how far away each found value is from the start //
+	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( int x, int y, const tType& Value ) const {
+		Grid2D<int> NewGrid( w, h );
+		
+		x = ClipX( x );
+		y = ClipY( y );
+		
+		if ( operator()( x, y ) != Value )
+			return NewGrid;
+		
+		NewGrid( x, y ) = 1;
+		
+		{
+			size_t Distance = 1;
+			for ( int _y = y; _y-- > 0; ) {
+				if ( operator()( x, _y ) == Value ) {
+					Distance++;
+					
+					NewGrid( x, _y ) = Distance;
+				}
+				else
+					break;
+			}
+		}
+
+		{
+			size_t Distance = 1;
+			for ( int _y = y; ++_y < h; ) {
+				if ( operator()( x, _y ) == Value ) {
+					Distance++;
+					
+					NewGrid( x, _y ) = Distance;
+				}
+				else
+					break;
+			}
+		}
+		
+		return NewGrid;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( const int x, const int y ) const {
+		return GenerateAdjacentXAdjacencyGrid( x, y, Clip( x, y ) );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( const int x, const int y ) const {
+		return GenerateAdjacentYAdjacencyGrid( x, y, Clip( x, y ) );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_Grid2D_H__ //
