@@ -1520,7 +1520,7 @@ public:
 	//   first, then the right side.  Lame.  //
 	
 	// - -------------------------------------------------------------------------------------- - //
-	inline const int CanDrop( int x, int y, int OffsetX = 0, int OffsetY = 1, const tType& Value = tType() ) const {
+	inline const int CanDrop( int x, int y, int OffsetX = 0, int OffsetY = 1, const tType& Value = tType(), const int ReturnValue = 2 ) const {
 		// Clip the incoming co-ordinates //
 		x = ClipX( x );
 		y = ClipY( y );
@@ -1534,7 +1534,7 @@ public:
 		OffsetY = ClipY( y + OffsetY );
 		
 		// If the offset tile is our test value, then we can drop //
-		return (operator()( OffsetX, OffsetY ) == Value) ? 2 : 0;
+		return (operator()( OffsetX, OffsetY ) == Value) ? ReturnValue : 0;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int CanRockfordDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
@@ -1578,6 +1578,8 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int CalcDropDistance( int x, int y, int OffsetX = 0, int OffsetY = 1, const tType& Value = tType() ) const {
+		// TODO: Assert the Offsets.  There should always be a 1 and a 0 or a -1 and a 0. //
+		
 		// Clip the incoming co-ordinates //
 		x = ClipX( x );
 		y = ClipY( y );
@@ -1807,10 +1809,35 @@ public:
 		return Temp;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	
+
 	// - -------------------------------------------------------------------------------------- - //
-	inline void ApplyDrop( int x, int y, const int DropType, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) {
-		
+	inline void ApplyDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1 ) {
+		Swap( x, y, x + OffsetX, y + OffsetY );
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void ApplyDropDistance( int x, int y, const int Distance, const int OffsetX = 0, const int OffsetY = 1 ) {
+		Swap( x, y, x + (OffsetX*Distance), y + (OffsetY*Distance) );	
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline void ApplyRockfordDrop( int x, int y, const int DropType, const int OffsetX = 0, const int OffsetY = 1 ) {
+		// Left Drop //
+		if ( DropType == 1 ) {
+			int DownOffsetX = ClipX( x + OffsetX );
+			int DownOffsetY = ClipY( y + OffsetY );
+	
+			Swap( x, y, DownOffsetX - OffsetY, DownOffsetY + OffsetX );
+		}
+		// Down Drop //
+		else if ( DropType == 2 ) {
+			Swap( x, y, x + OffsetX, y + OffsetY );
+		}
+		// Right Drop //
+		else if ( DropType == 3 ) {
+			int DownOffsetX = ClipX( x + OffsetX );
+			int DownOffsetY = ClipY( y + OffsetY );
+	
+			Swap( x, y, DownOffsetX + OffsetY, DownOffsetY - OffsetX );			
+		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
