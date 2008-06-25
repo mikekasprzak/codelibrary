@@ -1500,6 +1500,11 @@ public:
 	
 	//DrawRadiusRect
 	//DrawRadiusFilledRect
+	
+	// Add a function for generating a mask from a Grid.  I.e. all tiles that match a pattern, or //
+	//   dont match a pattern.  //
+	// Perhaps have a distinct MaskGrid type (Grid2D<int>), and functions for generating either //
+	//   a MaskGrid or a regular Grid copy. //
 
 public:
 	//CanDrop( x, y, offx, offy, TestValue )
@@ -1515,21 +1520,21 @@ public:
 	//   first, then the right side.  Lame.  //
 	
 	// - -------------------------------------------------------------------------------------- - //
-	inline const bool CanDrop( int x, int y, int OffsetX = 0, int OffsetY = 1, const tType& Value = tType() ) const {
+	inline const int CanDrop( int x, int y, int OffsetX = 0, int OffsetY = 1, const tType& Value = tType() ) const {
 		// Clip the incoming co-ordinates //
 		x = ClipX( x );
 		y = ClipY( y );
 		
 		// Bail if the tile is already empty //
 		if ( operator()(x,y) == Value )
-			return false;
+			return 0;
 		
 		// Generate and clip offset co-ordinate //
 		OffsetX = ClipX( x + OffsetX );
 		OffsetY = ClipY( y + OffsetY );
 		
 		// If the offset tile is our test value, then we can drop //
-		return operator()( OffsetX, OffsetY ) == Value;
+		return (operator()( OffsetX, OffsetY ) == Value) ? 2 : 0;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int CanRockfordDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
@@ -1568,6 +1573,80 @@ public:
 
 		// No drops available //
 		return 0;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline const int CalcDropDistance( int x, int y, int OffsetX = 0, int OffsetY = 1, const tType& Value = tType() ) const {
+		// Clip the incoming co-ordinates //
+		x = ClipX( x );
+		y = ClipY( y );
+		
+		// Bail if the tile is already empty //
+		if ( operator()(x,y) == Value )
+			return 0;
+			
+		int DropDistance = 0;
+		
+		{
+			// The offsets determine our sweeping order, so these are our sweeping order control //
+			int StartX, StartY;
+			int EndX, EndY;
+			int IncrementX, IncrementY;
+			
+			// X axis change //
+			if ( OffsetX > 0 ) {
+				StartX = x + OffsetX;
+				EndX = w;
+				IncrementX = 1;
+			}
+			else if ( OffsetX < 0 ) {
+				StartX = x + OffsetX;
+				EndX = -1;
+				IncrementX = -1;
+			}
+			else {
+				StartX = x;
+				EndX = x + 1;
+				IncrementX = 1;
+			}
+			
+			// Y axis change //
+			if ( OffsetY > 0 ) {
+				StartY = y + OffsetY;
+				EndY = h;
+				IncrementY = 1;
+			}
+			else if ( OffsetY < 0 ) {
+				StartY = y + OffsetY;
+				EndY = -1;
+				IncrementY = -1;
+			}
+			else {
+				StartY = y;
+				EndY = y + 1;
+				IncrementY = 1;
+			}
+
+			// Step through 			
+			for ( int _x = StartX; _x != EndX; _x += IncrementX ) {
+				printf( "*\n");
+				for ( int _y = StartY; _y != EndY; _y += IncrementY ) {
+					printf( "**\n");
+					// If the offset tile is our test value, then we can drop //
+					if ( operator()( _x, _y ) == Value ) {
+						DropDistance++;
+					}
+					else {
+						// Rather than double break, I'm just going to return //
+						return DropDistance;
+					}
+				}
+			}	
+		}
+		
+		// If we hit an end boundery, the drop distance is finished //
+		return DropDistance;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
@@ -1661,6 +1740,105 @@ public:
 		return DropGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	// Return a grid of all distances a tile can drop //
+	inline const Grid2D<int> GenerateDropDistanceGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
+		// Our drop grid //
+		Grid2D<int> DropGrid( w, h );
+		
+		for ( int x = 0; x < w; x++ ) {
+			for ( int y = 0; y < h; y++ ) {
+				DropGrid( x, y ) = CalcDropDistance( x, y, OffsetX, OffsetY, Value );
+			}
+		}
+		
+		// Return the Drop Grid //
+		return DropGrid;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+public:
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange the value of two tiles //
+	inline void Swap( int x1, int y1, int x2, int y2 ) {
+		x1 = ClipX( x1 );
+		y1 = ClipY( y1 );
+		
+		x2 = ClipX( x2 );
+		y2 = ClipY( y2 );
+		
+		tType Temp = operator()(x1,y1);
+		operator()(x1,y1) = operator()(x2,y2);
+		operator()(x2,y2) = Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange the passed value with the tile, returning the value of the tile //
+	inline const tType Swap( int x1, int y1, const tType& Value = tType() ) {
+		x1 = ClipX( x1 );
+		y1 = ClipY( y1 );
+			
+		tType Temp = operator()(x1,y1);
+		operator()(x1,y1) = Value;
+		
+		return Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	
+	// - -------------------------------------------------------------------------------------- - //
+	inline void ApplyDrop( int x, int y, const int DropType, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) {
+		
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	
+	// - -------------------------------------------------------------------------------------- - //
+	inline void ApplyDropGrid( const Grid2D<int>& DropGrid, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
+		// The offsets determine our sweeping order, so these are our sweeping order control //
+		int StartX, StartY;
+		int EndX, EndY;
+		int IncrementX, IncrementY;
+		
+		// X axis change //
+		if ( OffsetX >= 0 ) {
+			StartX = 0;
+			EndX = w - 1;
+			IncrementX = 1;
+		}
+		else {
+			StartX = w - 1;
+			EndX = 0;
+			IncrementX = -1;
+		}
+		
+		// Y axis change //
+		if ( OffsetY >= 0 ) {
+			StartY = 0;
+			EndY = h - 1;
+			IncrementY = 1;
+		}
+		else {
+			StartY = h - 1;
+			EndY = 0;
+			IncrementY = -1;
+		}
+		
+		
+		
+		for ( int x = StartX; x != EndX; x += IncrementX ) {
+			for ( int y = StartY; y != EndY; y += IncrementY ) {
+				if ( DropGrid( x, y ) ) {
+				//	operator()( x
+				}
+				
+				//DropGrid( x, y ) = CanDrop( x, y, OffsetX, OffsetY, Value );
+			}
+		}
+		
+		// Return the Drop Grid //
+		//return DropGrid;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_Grid2D_H__ //
