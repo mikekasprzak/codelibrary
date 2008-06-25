@@ -1532,29 +1532,29 @@ public:
 		return operator()( OffsetX, OffsetY ) == Value;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const bool CanRockfordDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
+	inline const int CanRockfordDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Clip the incoming co-ordinates //
 		x = ClipX( x );
 		y = ClipY( y );
 		
 		// Bail if the tile is already empty //
 		if ( operator()(x,y) == Value )
-			return false;
+			return 0;
 		
 		// Generate and clip the immediate offset co-ordinate //
 		int DownOffsetX = ClipX( x + OffsetX );
 		int DownOffsetY = ClipY( y + OffsetY );
 		
-		// If the offset tile is our test value, then we can drop straight down //
+		// Test below //
 		if ( operator()( DownOffsetX, DownOffsetY ) == Value )
-			return true;
+			return 2;
 
 			
 		// Test to the left //
 		if ( Clip( x - OffsetY, y - OffsetX ) == Value ) {
 			// Test below the left //
 			if ( Clip( DownOffsetX - OffsetY, DownOffsetY - OffsetX ) == Value ) {
-				return true;
+				return 1;
 			}
 		}
 		
@@ -1562,12 +1562,12 @@ public:
 		if ( Clip( x + OffsetY, y - OffsetX ) == Value ) {
 			// Test below the right //
 			if ( Clip( DownOffsetX + OffsetY, DownOffsetY - OffsetX ) == Value ) {
-				return true;
+				return 3;
 			}
 		}
 
 		// No drops available //
-		return false;
+		return 0;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
