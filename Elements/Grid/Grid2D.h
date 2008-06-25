@@ -1492,6 +1492,85 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+public:
+	// Drawing Code //
+	//DrawRect
+	//DrawFilledRect
+	//DrawLine
+	
+	//DrawRadiusRect
+	//DrawRadiusFilledRect
+
+public:
+	//CanDrop( x, y, offx, offy, TestValue )
+	//CanRockfordDrop( ... )
+	
+	//GenerateDropGrid( offx, offy, TestValue )
+	//GenerateRockfordDropGrid( offx, offy, TestValue) // 1, 2, 3, where 2 is down and others diagonals //
+	
+	// NOTE: Standard dropping can move in large chunks safely, but rockford drops should move //
+	//   individual tiles only. The reasoning for this is because with a single drop step, blocks //
+	//   that are above can move in to place to cause the rockford drop logic to push a tile that //
+	//   would by default come out the left to the right.  Otherwise, it'll fill up the left side //
+	//   first, then the right side.  Lame.  //
+	
+	// - -------------------------------------------------------------------------------------- - //
+	inline const bool CanDrop( int x, int y, int OffsetX = 0, int OffsetY = 1, const tType& Value = tType() ) const {
+		// Clip the incoming co-ordinates //
+		x = ClipX( x );
+		y = ClipY( y );
+		
+		// Bail if the tile is already empty //
+		if ( operator()(x,y) == Value )
+			return false;
+		
+		// Generate and clip offset co-ordinate //
+		OffsetX = ClipX( x + OffsetX );
+		OffsetY = ClipY( y + OffsetY );
+		
+		// If the offset tile is our test value, then we can drop //
+		return operator()( OffsetX, OffsetY ) == Value;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const bool CanRockfordDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
+		// Clip the incoming co-ordinates //
+		x = ClipX( x );
+		y = ClipY( y );
+		
+		// Bail if the tile is already empty //
+		if ( operator()(x,y) == Value )
+			return false;
+		
+		// Generate and clip the immediate offset co-ordinate //
+		int DownOffsetX = ClipX( x + OffsetX );
+		int DownOffsetY = ClipY( y + OffsetY );
+		
+		// If the offset tile is our test value, then we can drop straight down //
+		if ( operator()( DownOffsetX, DownOffsetY ) == Value )
+			return true;
+
+			
+		// Test to the left //
+		if ( Clip( x - OffsetY, y - OffsetX ) == Value ) {
+			// Test below the left //
+			if ( Clip( DownOffsetX - OffsetY, DownOffsetY - OffsetX ) == Value ) {
+				return true;
+			}
+		}
+		
+		// Test to the right //
+		if ( Clip( x + OffsetY, y - OffsetX ) == Value ) {
+			// Test below the right //
+			if ( Clip( DownOffsetX + OffsetY, DownOffsetY - OffsetX ) == Value ) {
+				return true;
+			}
+		}
+
+		// No drops available //
+		return false;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_Grid2D_H__ //
