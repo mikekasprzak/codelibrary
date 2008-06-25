@@ -1630,9 +1630,7 @@ public:
 
 			// Step through 			
 			for ( int _x = StartX; _x != EndX; _x += IncrementX ) {
-				printf( "*\n");
 				for ( int _y = StartY; _y != EndY; _y += IncrementY ) {
-					printf( "**\n");
 					// If the offset tile is our test value, then we can drop //
 					if ( operator()( _x, _y ) == Value ) {
 						DropDistance++;
@@ -1654,90 +1652,115 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return a grid of all tiles that are allowed to drop //
 	inline const Grid2D<int> GenerateDropGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
-		// The offsets determine our sweeping order, so these are our sweeping order control //
-		int StartX, StartY;
-		int EndX, EndY;
-		int IncrementX, IncrementY;
-		
-		// X axis change //
-		if ( OffsetX >= 0 ) {
-			StartX = 0;
-			EndX = w - 1;
-			IncrementX = 1;
-		}
-		else {
-			StartX = w - 1;
-			EndX = 0;
-			IncrementX = -1;
-		}
-		
-		// Y axis change //
-		if ( OffsetY >= 0 ) {
-			StartY = 0;
-			EndY = h - 1;
-			IncrementY = 1;
-		}
-		else {
-			StartY = h - 1;
-			EndY = 0;
-			IncrementY = -1;
-		}
-		
 		// Our drop grid //
 		Grid2D<int> DropGrid( w, h );
 		
-		for ( int x = StartX; x != EndX; x += IncrementX ) {
-			for ( int y = StartY; y != EndY; y += IncrementY ) {
+		for ( int x = 0; x < w; x++ ) {
+			for ( int y = 0; y < h; y++ ) {
 				DropGrid( x, y ) = CanDrop( x, y, OffsetX, OffsetY, Value );
 			}
 		}
 		
 		// Return the Drop Grid //
 		return DropGrid;
+
+//		// The offsets determine our sweeping order, so these are our sweeping order control //
+//		int StartX, StartY;
+//		int EndX, EndY;
+//		int IncrementX, IncrementY;
+//		
+//		// X axis change //
+//		if ( OffsetX >= 0 ) {
+//			StartX = 0;
+//			EndX = w - 1;
+//			IncrementX = 1;
+//		}
+//		else {
+//			StartX = w - 1;
+//			EndX = 0;
+//			IncrementX = -1;
+//		}
+//		
+//		// Y axis change //
+//		if ( OffsetY >= 0 ) {
+//			StartY = 0;
+//			EndY = h - 1;
+//			IncrementY = 1;
+//		}
+//		else {
+//			StartY = h - 1;
+//			EndY = 0;
+//			IncrementY = -1;
+//		}
+//		
+//		// Our drop grid //
+//		Grid2D<int> DropGrid( w, h );
+//		
+//		for ( int x = StartX; x != EndX; x += IncrementX ) {
+//			for ( int y = StartY; y != EndY; y += IncrementY ) {
+//				DropGrid( x, y ) = CanDrop( x, y, OffsetX, OffsetY, Value );
+//			}
+//		}
+//		
+//		// Return the Drop Grid //
+//		return DropGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return a grid of all tiles that are allowed to rockford drop //
 	inline const Grid2D<int> GenerateRockfordDropGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
-		// The offsets determine our sweeping order, so these are our sweeping order control //
-		int StartX, StartY;
-		int EndX, EndY;
-		int IncrementX, IncrementY;
-		
-		// X axis change //
-		if ( OffsetX >= 0 ) {
-			StartX = 0;
-			EndX = w - 1;
-			IncrementX = 1;
-		}
-		else {
-			StartX = w - 1;
-			EndX = 0;
-			IncrementX = -1;
-		}
-		
-		// Y axis change //
-		if ( OffsetY >= 0 ) {
-			StartY = 0;
-			EndY = h - 1;
-			IncrementY = 1;
-		}
-		else {
-			StartY = h - 1;
-			EndY = 0;
-			IncrementY = -1;
-		}
-		
 		// Our drop grid //
 		Grid2D<int> DropGrid( w, h );
 		
-		for ( int x = StartX; x != EndX; x += IncrementX ) {
-			for ( int y = StartY; y != EndY; y += IncrementY ) {
+		for ( int x = 0; x < w; x++ ) {
+			for ( int y = 0; y < h; y++ ) {
 				DropGrid( x, y ) = CanRockfordDrop( x, y, OffsetX, OffsetY, Value );
 			}
 		}
 		
 		// Return the Drop Grid //
 		return DropGrid;
+
+
+//		// The offsets determine our sweeping order, so these are our sweeping order control //
+//		int StartX, StartY;
+//		int EndX, EndY;
+//		int IncrementX, IncrementY;
+//		
+//		// X axis change //
+//		if ( OffsetX >= 0 ) {
+//			StartX = 0;
+//			EndX = w - 1;
+//			IncrementX = 1;
+//		}
+//		else {
+//			StartX = w - 1;
+//			EndX = 0;
+//			IncrementX = -1;
+//		}
+//		
+//		// Y axis change //
+//		if ( OffsetY >= 0 ) {
+//			StartY = 0;
+//			EndY = h - 1;
+//			IncrementY = 1;
+//		}
+//		else {
+//			StartY = h - 1;
+//			EndY = 0;
+//			IncrementY = -1;
+//		}
+//		
+//		// Our drop grid //
+//		Grid2D<int> DropGrid( w, h );
+//		
+//		for ( int x = StartX; x != EndX; x += IncrementX ) {
+//			for ( int y = StartY; y != EndY; y += IncrementY ) {
+//				DropGrid( x, y ) = CanRockfordDrop( x, y, OffsetX, OffsetY, Value );
+//			}
+//		}
+//		
+//		// Return the Drop Grid //
+//		return DropGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
