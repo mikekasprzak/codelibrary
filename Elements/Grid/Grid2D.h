@@ -66,11 +66,11 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t Width() const {
+	inline const int Width() const {
 		return w;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t Height() const {
+	inline const int Height() const {
 		return h;
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -100,36 +100,36 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Index Generating functions.  Return a valid index for [] operator. //
 	// - -------------------------------------------------------------------------------------- - //
-	inline const size_t Index( const size_t _x, const size_t _y ) const {
+	inline const size_t Index( const int _x, const int _y ) const {
 		// TODO: Assert out of bounds 
-		return _x + (_y * w);
+		return _x + (_y * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t IndexWrap( const int _x, const int _y ) const {
-		return (_x % w) + ((_y % h) * w);
+		return (_x % Width()) + ((_y % Height()) * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t IndexWrapX( const int _x, const int _y ) const {
-		return (_x % w) + ((_y) * w);
+		return (_x % Width()) + ((_y) * Height());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t IndexWrapY( const int _x, const int _y ) const {
-		return (_x) + ((_y % h) * w);
+		return (_x) + ((_y % Height()) * Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t IndexNextWrap( const int _x, const int _y ) const {
-		return (_x + (_y * w)) % Size();
+		return (_x + (_y * Width())) % Size();
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
 	inline const size_t IndexClip( int _x, int _y ) const {
-		if ( _x >= w )
-			_x = w - 1;
+		if ( _x >= Width() )
+			_x = Width() - 1;
 		else if ( _x < 0 )
 			_x = 0;
 			
-		if ( _y >= h )
-			_y = h - 1;
+		if ( _y >= Height() )
+			_y = Height() - 1;
 		else if ( _y < 0 )
 			_y = 0;
 			
@@ -138,8 +138,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
 	inline const size_t IndexClipX( int _x, int _y ) const {
-		if ( _x >= w )
-			_x = w - 1;
+		if ( _x >= Width() )
+			_x = Width() - 1;
 		else if ( _x < 0 )
 			_x = 0;
 			
@@ -148,8 +148,8 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
 	inline const size_t IndexClipY( int _x, int _y ) const {
-		if ( _y >= h )
-			_y = h - 1;
+		if ( _y >= Height() )
+			_y = Height() - 1;
 		else if ( _y < 0 )
 			_y = 0;
 			
@@ -219,7 +219,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline tType& Clip( int _x, int _y ) {
+	inline tType& Clip( const int _x, const int _y ) {
 		return Data[ IndexClip( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -229,7 +229,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline tType& ClipX( int _x, int _y ) {
+	inline tType& ClipX( const int _x, const int _y ) {
 		return Data[ IndexClipX( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -239,7 +239,7 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline tType& ClipY( int _x, int _y ) {
+	inline tType& ClipY( const int _x, const int _y ) {
 		return Data[ IndexClipY( _x, _y ) ];
 	}
 	// - -------------------------------------------------------------------------------------- - //
@@ -251,19 +251,19 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const size_t ClipX( int _x ) const {
-		if ( _x >= w )
-			_x = w - 1;
+	inline const int ClipX( int _x ) const {
+		if ( _x >= Width() )
+			_x = Width() - 1;
 		else if ( _x < 0 )
 			_x = 0;
-			
+		
 		return _x;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, aligning to edges //
-	inline const size_t ClipY( int _y ) const {
-		if ( _y >= h )
-			_y = h - 1;
+	inline const int ClipY( int _y ) const {
+		if ( _y >= Height() )
+			_y = Height() - 1;
 		else if ( _y < 0 )
 			_y = 0;
 			
@@ -271,24 +271,24 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t WrapX( const int _x ) const {
-		return (_x % w);
+		return (_x % Width());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const size_t WrapY( const int _y ) const {
-		return (_y % h);
+		return (_y % Height());
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Get the position, returning the dead value if over //
-	inline const tType& DeadClip( const size_t _x, const size_t _y, const tType& DeadValue = tType() ) const {
-		if ( _x >= w )
+	inline const tType& DeadClip( const int _x, const int _y, const tType& DeadValue = tType() ) const {
+		if ( _x >= Width() )
 			return DeadValue;
 		else if ( _x < 0 )
 			return DeadValue;
 			
-		if ( _y >= h )
+		if ( _y >= Height() )
 			return DeadValue;
 		else if ( _y < 0 )
 			return DeadValue;
@@ -1153,7 +1153,7 @@ public:
 				break;
 		}
 
-		for ( int _x = x; ++_x < w; ) {
+		for ( int _x = x; ++_x < Width(); ) {
 			if ( operator()( _x, y ) == Value )
 				CurrentCount++;
 			else
@@ -1177,7 +1177,7 @@ public:
 				break;
 		}
 
-		for ( int _y = y; ++_y < h; ) {
+		for ( int _y = y; ++_y < Height(); ) {
 			if ( operator()( x, _y ) == Value )
 				CurrentCount++;
 			else
@@ -1210,7 +1210,7 @@ public:
 		size_t CurrentCount = 0;
 		y = ClipY( y );
 
-		for ( int _x = w; _x--; ) {
+		for ( int _x = Width(); _x--; ) {
 			if ( operator()( _x, y ) == Value )
 				CurrentCount++;
 		}
@@ -1223,7 +1223,7 @@ public:
 		size_t CurrentCount = 0;
 		x = ClipY( x );
 
-		for ( int _y = h; _y--; ) {
+		for ( int _y = Height(); _y--; ) {
 			if ( operator()( x, _y ) == Value )
 				CurrentCount++;
 		}
@@ -1238,7 +1238,7 @@ public:
 	inline const int FirstX( int x, int y, const tType& Value ) const {
 		x = ClipX( x );
 		y = ClipY( y );
-		for ( ; x < w; x++ ) {
+		for ( ; x < Width(); x++ ) {
 			if ( operator()( x, y ) == Value )
 				return x;
 		}
@@ -1249,7 +1249,7 @@ public:
 	inline const int FirstY( int x, int y, const tType& Value ) const {
 		x = ClipX( x );
 		y = ClipY( y );
-		for ( ; y < h; y++ ) {
+		for ( ; y < Height(); y++ ) {
 			if ( operator()( x, y ) == Value )
 				return y;
 		}
@@ -1286,7 +1286,7 @@ public:
 	inline const int FirstNotX( int x, int y, const tType& Value ) const {
 		x = ClipX( x );
 		y = ClipY( y );
-		for ( ; x < w; x++ ) {
+		for ( ; x < Width(); x++ ) {
 			if ( operator()( x, y ) != Value )
 				return x;
 		}
@@ -1297,7 +1297,7 @@ public:
 	inline const int FirstNotY( int x, int y, const tType& Value ) const {
 		x = ClipX( x );
 		y = ClipY( y );
-		for ( ; y < h; y++ ) {
+		for ( ; y < Height(); y++ ) {
 			if ( operator()( x, y ) != Value )
 				return y;
 		}
@@ -1342,14 +1342,14 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the last occurence of Value on a line //
 	inline const int LastLineX( int y, const tType& Value ) const {
-		// NOTE: 'cause LastX does clipping, you could technically pass w directly // 
-		return LastX( w - 1, y, Value );
+		// NOTE: 'cause LastX does clipping, you could technically pass Width directly // 
+		return LastX( Width() - 1, y, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the last occurence of Value on a line //
 	inline const int LastLineY( int x, const tType& Value ) const {
-		// NOTE: 'cause LastY does clipping, you could technically pass h directly //
-		return LastY( x, h - 1, Value );
+		// NOTE: 'cause LastY does clipping, you could technically pass Height directly //
+		return LastY( x, Height() - 1, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -1368,14 +1368,14 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "x index" of the last occurence of not Value on a line //
 	inline const int LastLineNotX( int y, const tType& Value ) const {
-		// NOTE: 'cause LastX does clipping, you could technically pass w directly // 
-		return LastNotX( w - 1, y, Value );
+		// NOTE: 'cause LastX does clipping, you could technically pass Width directly // 
+		return LastNotX( Width() - 1, y, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return the "y index" of the last occurence of not Value on a line //
 	inline const int LastLineNotY( int x, const tType& Value ) const {
-		// NOTE: 'cause LastY does clipping, you could technically pass h directly //
-		return LastNotY( x, h - 1, Value );
+		// NOTE: 'cause LastY does clipping, you could technically pass Height directly //
+		return LastNotY( x, Height() - 1, Value );
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -1383,7 +1383,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Generate a grid of values for how far away each found value is from the start //
 	inline const Grid2D<int> GenerateAdjacentXAdjacencyGrid( int x, int y, const tType& Value ) const {
-		Grid2D<int> NewGrid( w, h );
+		Grid2D<int> NewGrid( Width(), Height() );
 		
 		x = ClipX( x );
 		y = ClipY( y );
@@ -1408,7 +1408,7 @@ public:
 
 		{
 			size_t Distance = 1;
-			for ( int _x = x; ++_x < w; ) {
+			for ( int _x = x; ++_x < Width(); ) {
 				if ( operator()( _x, y ) == Value ) {
 					Distance++;
 					
@@ -1424,7 +1424,7 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	// Generate a grid of values for how far away each found value is from the start //
 	inline const Grid2D<int> GenerateAdjacentYAdjacencyGrid( int x, int y, const tType& Value ) const {
-		Grid2D<int> NewGrid( w, h );
+		Grid2D<int> NewGrid( Width(), Height() );
 		
 		x = ClipX( x );
 		y = ClipY( y );
@@ -1449,7 +1449,7 @@ public:
 
 		{
 			size_t Distance = 1;
-			for ( int _y = y; ++_y < h; ) {
+			for ( int _y = y; ++_y < Height(); ) {
 				if ( operator()( x, _y ) == Value ) {
 					Distance++;
 					
@@ -1505,6 +1505,11 @@ public:
 	//   dont match a pattern.  //
 	// Perhaps have a distinct MaskGrid type (Grid2D<int>), and functions for generating either //
 	//   a MaskGrid or a regular Grid copy. //
+	
+	// Add a function for testing "per pixel collision" style for contacts between two placed //
+	//   overlapping grids.  This is needed (preferred) for a tetris move verification function. //
+	
+	// Add a function for shifting the contents of a grid //
 
 public:
 	//CanDrop( x, y, offx, offy, TestValue )
@@ -1520,7 +1525,7 @@ public:
 	//   first, then the right side.  Lame.  //
 	
 	// - -------------------------------------------------------------------------------------- - //
-	inline const int CanDrop( int x, int y, int OffsetX = 0, int OffsetY = 1, const tType& Value = tType(), const int ReturnValue = 2 ) const {
+	inline const int CanDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Clip the incoming co-ordinates //
 		x = ClipX( x );
 		y = ClipY( y );
@@ -1530,11 +1535,11 @@ public:
 			return 0;
 		
 		// Generate and clip offset co-ordinate //
-		OffsetX = ClipX( x + OffsetX );
-		OffsetY = ClipY( y + OffsetY );
-		
+		int DownOffsetX = ClipX( x + OffsetX );
+		int DownOffsetY = ( y + OffsetY );
+			
 		// If the offset tile is our test value, then we can drop //
-		return (operator()( OffsetX, OffsetY ) == Value) ? ReturnValue : 0;
+		return operator()( DownOffsetX, DownOffsetY ) == Value;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int CanRockfordDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
@@ -1550,6 +1555,10 @@ public:
 		int DownOffsetX = ClipX( x + OffsetX );
 		int DownOffsetY = ClipY( y + OffsetY );
 		
+		// Bail if we happened to clip ourselves to the same position (i.e. on a limit) //
+		if ( (DownOffsetX == x) && (DownOffsetY == y) )
+			return 0;
+
 		// Test below //
 		if ( operator()( DownOffsetX, DownOffsetY ) == Value )
 			return 2;
@@ -1557,16 +1566,22 @@ public:
 			
 		// Test to the left //
 		if ( Clip( x - OffsetY, y + OffsetX ) == Value ) {
+			int DownX = ClipX( DownOffsetX - OffsetY );
+			int DownY = ClipY( DownOffsetY + OffsetX );
+
 			// Test below the left //
-			if ( Clip( DownOffsetX - OffsetY, DownOffsetY + OffsetX ) == Value ) {
+			if ( operator()( DownX, DownY ) == Value ) {
 				return 1;
 			}
 		}
 		
 		// Test to the right //
 		if ( Clip( x + OffsetY, y - OffsetX ) == Value ) {
+			int DownX = ClipX( DownOffsetX + OffsetY );
+			int DownY = ClipY( DownOffsetY - OffsetX );
+
 			// Test below the right //
-			if ( Clip( DownOffsetX + OffsetY, DownOffsetY - OffsetX ) == Value ) {
+			if ( operator()( DownX, DownY ) == Value ) {
 				return 3;
 			}
 		}
@@ -1599,7 +1614,7 @@ public:
 			// X axis change //
 			if ( OffsetX > 0 ) {
 				StartX = x + OffsetX;
-				EndX = w;
+				EndX = Width();
 				IncrementX = 1;
 			}
 			else if ( OffsetX < 0 ) {
@@ -1616,7 +1631,7 @@ public:
 			// Y axis change //
 			if ( OffsetY > 0 ) {
 				StartY = y + OffsetY;
-				EndY = h;
+				EndY = Height();
 				IncrementY = 1;
 			}
 			else if ( OffsetY < 0 ) {
@@ -1655,114 +1670,31 @@ public:
 	// Return a grid of all tiles that are allowed to drop //
 	inline const Grid2D<int> GenerateDropGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Our drop grid //
-		Grid2D<int> DropGrid( w, h );
+		Grid2D<int> DropGrid( Width(), Height() );
 		
-		for ( int x = 0; x < w; x++ ) {
-			for ( int y = 0; y < h; y++ ) {
+		for ( int x = 0; x < Width(); x++ ) {
+			for ( int y = 0; y < Height(); y++ ) {
 				DropGrid( x, y ) = CanDrop( x, y, OffsetX, OffsetY, Value );
 			}
 		}
 		
 		// Return the Drop Grid //
 		return DropGrid;
-
-//		// The offsets determine our sweeping order, so these are our sweeping order control //
-//		int StartX, StartY;
-//		int EndX, EndY;
-//		int IncrementX, IncrementY;
-//		
-//		// X axis change //
-//		if ( OffsetX >= 0 ) {
-//			StartX = 0;
-//			EndX = w - 1;
-//			IncrementX = 1;
-//		}
-//		else {
-//			StartX = w - 1;
-//			EndX = 0;
-//			IncrementX = -1;
-//		}
-//		
-//		// Y axis change //
-//		if ( OffsetY >= 0 ) {
-//			StartY = 0;
-//			EndY = h - 1;
-//			IncrementY = 1;
-//		}
-//		else {
-//			StartY = h - 1;
-//			EndY = 0;
-//			IncrementY = -1;
-//		}
-//		
-//		// Our drop grid //
-//		Grid2D<int> DropGrid( w, h );
-//		
-//		for ( int x = StartX; x != EndX; x += IncrementX ) {
-//			for ( int y = StartY; y != EndY; y += IncrementY ) {
-//				DropGrid( x, y ) = CanDrop( x, y, OffsetX, OffsetY, Value );
-//			}
-//		}
-//		
-//		// Return the Drop Grid //
-//		return DropGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Return a grid of all tiles that are allowed to rockford drop //
 	inline const Grid2D<int> GenerateRockfordDropGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Our drop grid //
-		Grid2D<int> DropGrid( w, h );
+		Grid2D<int> DropGrid( Width(), Height() );
 		
-		for ( int x = 0; x < w; x++ ) {
-			for ( int y = 0; y < h; y++ ) {
+		for ( int x = 0; x < Width(); x++ ) {
+			for ( int y = 0; y < Height(); y++ ) {
 				DropGrid( x, y ) = CanRockfordDrop( x, y, OffsetX, OffsetY, Value );
 			}
 		}
 		
 		// Return the Drop Grid //
 		return DropGrid;
-
-
-//		// The offsets determine our sweeping order, so these are our sweeping order control //
-//		int StartX, StartY;
-//		int EndX, EndY;
-//		int IncrementX, IncrementY;
-//		
-//		// X axis change //
-//		if ( OffsetX >= 0 ) {
-//			StartX = 0;
-//			EndX = w - 1;
-//			IncrementX = 1;
-//		}
-//		else {
-//			StartX = w - 1;
-//			EndX = 0;
-//			IncrementX = -1;
-//		}
-//		
-//		// Y axis change //
-//		if ( OffsetY >= 0 ) {
-//			StartY = 0;
-//			EndY = h - 1;
-//			IncrementY = 1;
-//		}
-//		else {
-//			StartY = h - 1;
-//			EndY = 0;
-//			IncrementY = -1;
-//		}
-//		
-//		// Our drop grid //
-//		Grid2D<int> DropGrid( w, h );
-//		
-//		for ( int x = StartX; x != EndX; x += IncrementX ) {
-//			for ( int y = StartY; y != EndY; y += IncrementY ) {
-//				DropGrid( x, y ) = CanRockfordDrop( x, y, OffsetX, OffsetY, Value );
-//			}
-//		}
-//		
-//		// Return the Drop Grid //
-//		return DropGrid;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
@@ -1770,10 +1702,10 @@ public:
 	// Return a grid of all distances a tile can drop //
 	inline const Grid2D<int> GenerateDropDistanceGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Our drop grid //
-		Grid2D<int> DropGrid( w, h );
+		Grid2D<int> DropGrid(Width(), Height() );
 		
-		for ( int x = 0; x < w; x++ ) {
-			for ( int y = 0; y < h; y++ ) {
+		for ( int x = 0; x < Width(); x++ ) {
+			for ( int y = 0; y < Height(); y++ ) {
 				DropGrid( x, y ) = CalcDropDistance( x, y, OffsetX, OffsetY, Value );
 			}
 		}
@@ -1811,15 +1743,15 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline void ApplyDrop( int x, int y, const int OffsetX = 0, const int OffsetY = 1 ) {
+	inline void ApplyDrop( const int x, const int y, const int OffsetX = 0, const int OffsetY = 1 ) {
 		Swap( x, y, x + OffsetX, y + OffsetY );
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void ApplyDropDistance( int x, int y, const int Distance, const int OffsetX = 0, const int OffsetY = 1 ) {
+	inline void ApplyDropDistance( const int x, const int y, const int Distance, const int OffsetX = 0, const int OffsetY = 1 ) {
 		Swap( x, y, x + (OffsetX*Distance), y + (OffsetY*Distance) );	
 	}
 	// - -------------------------------------------------------------------------------------- - //
-	inline void ApplyRockfordDrop( int x, int y, const int DropType, const int OffsetX = 0, const int OffsetY = 1 ) {
+	inline void ApplyRockfordDrop( const int x, const int y, const int DropType, const int OffsetX = 0, const int OffsetY = 1 ) {
 		// Left Drop //
 		if ( DropType == 1 ) {
 			int DownOffsetX = ClipX( x + OffsetX );
@@ -1841,51 +1773,176 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	
+	
 	// - -------------------------------------------------------------------------------------- - //
-	inline void ApplyDropGrid( const Grid2D<int>& DropGrid, const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
+	// NOTE: Applying a Drop or DropDistance Grid would be fine, but appling a RockfordDrop Grid //
+	//   wouldn't work, since rockford logic allows 2 tiles to overlap once solving. //
+	// - -------------------------------------------------------------------------------------- - //
+	inline void Drop( const int OffsetX = 0, const int OffsetY = 1 ) {
+		// TODO: Assert the Offsets.  There should always be a 1 and a 0 or a -1 and a 0. //
+
 		// The offsets determine our sweeping order, so these are our sweeping order control //
 		int StartX, StartY;
 		int EndX, EndY;
 		int IncrementX, IncrementY;
 		
 		// X axis change //
-		if ( OffsetX >= 0 ) {
+		if ( OffsetX <= 0 ) {
 			StartX = 0;
-			EndX = w - 1;
+			EndX = Width();
 			IncrementX = 1;
 		}
 		else {
-			StartX = w - 1;
-			EndX = 0;
+			StartX = Width() - 1;
+			EndX = -1;
 			IncrementX = -1;
 		}
 		
 		// Y axis change //
-		if ( OffsetY >= 0 ) {
+		if ( OffsetY <= 0 ) {
 			StartY = 0;
-			EndY = h - 1;
+			EndY = Height();
 			IncrementY = 1;
 		}
-		else {
-			StartY = h - 1;
-			EndY = 0;
+		else 
+		{
+			StartY = Height() - 1;
+			EndY = -1;
 			IncrementY = -1;
 		}
 		
-		
-		
-		for ( int x = StartX; x != EndX; x += IncrementX ) {
-			for ( int y = StartY; y != EndY; y += IncrementY ) {
-				if ( DropGrid( x, y ) ) {
-				//	operator()( x
+		// Depending on the offset, x or y should be the inner increment //
+		if ( OffsetY == 0 ) {
+			// Step through the Grid //
+			for ( int x = StartX; x != EndX; x += IncrementX ) {
+				for ( int y = StartY; y != EndY; y += IncrementY ) {
+					if ( CanDrop( x, y, OffsetX, OffsetY ) )
+						ApplyDrop( x, y, OffsetX, OffsetY );
 				}
-				
-				//DropGrid( x, y ) = CanDrop( x, y, OffsetX, OffsetY, Value );
 			}
 		}
+		else {
+			// Step through the Grid //
+			for ( int y = StartY; y != EndY; y += IncrementY ) {
+				for ( int x = StartX; x != EndX; x += IncrementX ) {
+					if ( CanDrop( x, y, OffsetX, OffsetY ) )
+						ApplyDrop( x, y, OffsetX, OffsetY );
+				}
+			}
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline void DropDistance( const int OffsetX = 0, const int OffsetY = 1 ) {
+		// TODO: Assert the Offsets.  There should always be a 1 and a 0 or a -1 and a 0. //
+
+		// The offsets determine our sweeping order, so these are our sweeping order control //
+		int StartX, StartY;
+		int EndX, EndY;
+		int IncrementX, IncrementY;
 		
-		// Return the Drop Grid //
-		//return DropGrid;
+		// X axis change //
+		if ( OffsetX <= 0 ) {
+			StartX = 0;
+			EndX = Width();
+			IncrementX = 1;
+		}
+		else {
+			StartX = Width() - 1;
+			EndX = -1;
+			IncrementX = -1;
+		}
+		
+		// Y axis change //
+		if ( OffsetY <= 0 ) {
+			StartY = 0;
+			EndY = Height();
+			IncrementY = 1;
+		}
+		else 
+		{
+			StartY = Height() - 1;
+			EndY = -1;
+			IncrementY = -1;
+		}
+		
+		// Depending on the offset, x or y should be the inner increment //
+		if ( OffsetY == 0 ) {
+			// Step through the Grid //
+			for ( int x = StartX; x != EndX; x += IncrementX ) {
+				for ( int y = StartY; y != EndY; y += IncrementY ) {
+					if ( int Distance = CalcDropDistance( x, y, OffsetX, OffsetY ) )
+						ApplyDropDistance( x, y, Distance, OffsetX, OffsetY );
+				}
+			}
+		}
+		else {
+			// Step through the Grid //
+			for ( int y = StartY; y != EndY; y += IncrementY ) {
+				for ( int x = StartX; x != EndX; x += IncrementX ) {
+					if ( int Distance = CalcDropDistance( x, y, OffsetX, OffsetY ) )
+						ApplyDropDistance( x, y, Distance, OffsetX, OffsetY );
+				}
+			}
+		}
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline void RockfordDrop( const int OffsetX = 0, const int OffsetY = 1 ) {
+		// TODO: Assert the Offsets.  There should always be a 1 and a 0 or a -1 and a 0. //
+
+		// The offsets determine our sweeping order, so these are our sweeping order control //
+		int StartX, StartY;
+		int EndX, EndY;
+		int IncrementX, IncrementY;
+		
+		// X axis change //
+		if ( OffsetX <= 0 ) {
+			StartX = 0;
+			EndX = Width();
+			IncrementX = 1;
+		}
+		else {
+			StartX = Width() - 1;
+			EndX = -1;
+			IncrementX = -1;
+		}
+		
+		// Y axis change //
+		if ( OffsetY <= 0 ) {
+			StartY = 0;
+			EndY = Height();
+			IncrementY = 1;
+		}
+		else 
+		{
+			StartY = Height() - 1;
+			EndY = -1;
+			IncrementY = -1;
+		}
+		
+		// Depending on the offset, x or y should be the inner increment //
+		if ( OffsetY == 0 ) {
+			// Step through the Grid //
+			for ( int x = StartX; x != EndX; x += IncrementX ) {
+				for ( int y = StartY; y != EndY; y += IncrementY ) {
+					if ( int DropType = CanRockfordDrop( x, y, OffsetX, OffsetY ) )
+						ApplyRockfordDrop( x, y, DropType, OffsetX, OffsetY );
+				}
+			}
+		}
+		else
+		{
+			// Step through the Grid //
+			for ( int y = StartY; y != EndY; y += IncrementY ) {
+				for ( int x = StartX; x != EndX; x += IncrementX ) {
+					if ( int DropType = CanRockfordDrop( x, y, OffsetX, OffsetY ) )
+						ApplyRockfordDrop( x, y, DropType, OffsetX, OffsetY );
+				}
+			}
+		}
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
