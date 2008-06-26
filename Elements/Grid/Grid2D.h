@@ -1510,6 +1510,8 @@ public:
 	//   overlapping grids.  This is needed (preferred) for a tetris move verification function. //
 	
 	// Add a function for shifting the contents of a grid //
+	
+	// Add equivalent functions for Adjacency searching (GenerateAdjacentDistanceGrid, ...) //
 
 public:
 	//CanDrop( x, y, offx, offy, TestValue )
