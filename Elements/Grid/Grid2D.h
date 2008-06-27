@@ -1733,12 +1733,20 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	// Exchange the passed value with the tile, returning the value of the tile //
-	inline const tType Swap( int x1, int y1, const tType& Value = tType() ) {
+	inline const tType Swap( int x1, int y1, const tType& Value ) {
 		x1 = ClipX( x1 );
 		y1 = ClipY( y1 );
 			
 		tType Temp = operator()(x1,y1);
 		operator()(x1,y1) = Value;
+		
+		return Temp;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Exchange the passed value with the tile, returning the value of the tile //
+	inline const tType Swap( int Index, const tType& Value ) {
+		tType Temp = operator[](Index);
+		operator[](Index) = Value;
 		
 		return Temp;
 	}
