@@ -44,15 +44,30 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 	inline Grid2D<tType>& operator = (const Grid2D<tType>& Copy) {
 		if ( this != &Copy ) {
-			if ( Data )
-				delete [] Data;
-			
-			w = Copy.w;
-			h = Copy.h;
-			
-			Data = new tType[ w*h ];
-			for ( size_t idx = w*h; idx--; ) {
-				Data[ idx ] = Copy.Data[ idx ];
+			// If we just happen to be the same total size //
+			if ( Copy.Size() == Size() ) {
+				w = Copy.w;
+				h = Copy.h;
+
+				// Copy our data and don't delete it //
+				for ( size_t idx = w*h; idx--; ) {
+					Data[ idx ] = Copy.Data[ idx ];
+				}				
+			}
+			// If different size, or no size //
+			else {
+				// Toast our data, if we have one //
+				if ( Data )
+					delete [] Data;
+				
+				w = Copy.w;
+				h = Copy.h;
+				
+				// Create and copy the data //
+				Data = new tType[ w*h ];
+				for ( size_t idx = w*h; idx--; ) {
+					Data[ idx ] = Copy.Data[ idx ];
+				}
 			}
 		}
 		
