@@ -1566,7 +1566,7 @@ public:
 		
 		// Generate and clip offset co-ordinate //
 		int DownOffsetX = ClipX( x + OffsetX );
-		int DownOffsetY = ( y + OffsetY );
+		int DownOffsetY = ClipY( y + OffsetY );
 			
 		// If the offset tile is our test value, then we can drop //
 		return operator()( DownOffsetX, DownOffsetY ) == Value;
@@ -1984,6 +1984,85 @@ public:
 	}
 	// - -------------------------------------------------------------------------------------- - //
 
+
+	// - -------------------------------------------------------------------------------------- - //
+	inline bool AddDrop( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
+		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+		//   Row/Column //
+
+		int x, y;
+		
+		if ( OffsetX < 0 ) {
+			x = Width() - 1;
+			y = Index;
+		}
+		else if ( OffsetX > 0 ) {
+			x = 0;
+			y = Index;
+		}
+		else if ( OffsetY < 0 ) {
+			x = Index;
+			y = Height() - 1;
+		}
+		else  if ( OffsetY < 0 ) {
+			x = Index;
+			y = 0;
+		}
+		
+		if ( CanDrop( x, y, OffsetX, OffsetY ) ) {
+			Swap( x, y, Value );
+			return true;
+		}
+
+		return false;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline bool AddDropDistance( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
+		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+		//   Row/Column //
+
+		int x, y;
+		
+		if ( OffsetX < 0 ) {
+			x = Width() - 1;
+			y = ClipY(Index);
+		}
+		else if ( OffsetX > 0 ) {
+			x = 0;
+			y = ClipY(Index);
+		}
+		else if ( OffsetY < 0 ) {
+			x = ClipX(Index);
+			y = Height() - 1;
+		}
+		else  if ( OffsetY < 0 ) {
+			x = ClipX(Index);
+			y = 0;
+		}
+		
+		if ( int Distance = CalcDropDistance( x, y, OffsetX, OffsetY ) ) {
+			Swap( x, y, Value );
+			ApplyDropDistance( x, y, Distance, OffsetX, OffsetY );
+			return true;
+		}
+
+		return false;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline bool AddRockfordDrop( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
+		// TODO: The fall part will technically pick the wrong way on the bottom and right //
+		
+		// Desired Tile //
+		if ( !AddDrop( Index, OffsetX, OffsetY, Value ) ) {
+			// Tile to the Left //
+			if ( !AddDrop( Index-1, OffsetX, OffsetY, Value ) ) {
+				// Tile to the Right //
+				return AddDrop( Index-1, OffsetX, OffsetY, Value );
+			}
+		}
+		return true;
+	}
+	// - -------------------------------------------------------------------------------------- - //
 };
 // - ------------------------------------------------------------------------------------------ - //
 #endif // __Grid_Grid2D_H__ //
