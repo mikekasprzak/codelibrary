@@ -1986,6 +1986,36 @@ public:
 
 
 	// - -------------------------------------------------------------------------------------- - //
+	inline bool CanSet( const int x, const int y ) const {
+		return operator()(x,y) == 0;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+//	inline bool CanAddDrop( const int Index, const int OffsetX, const int OffsetY, const tType& TestValue = tType()) {
+//		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+//		//   Row/Column //
+//
+//		int x, y;
+//		
+//		if ( OffsetX < 0 ) {
+//			x = Width() - 1;
+//			y = Index;
+//		}
+//		else if ( OffsetX > 0 ) {
+//			x = 0;
+//			y = Index;
+//		}
+//		else if ( OffsetY < 0 ) {
+//			x = Index;
+//			y = Height() - 1;
+//		}
+//		else  if ( OffsetY > 0 ) {
+//			x = Index;
+//			y = 0;
+//		}
+//		
+//		return operator()(x,y) == TestValue;
+//	}
+	// - -------------------------------------------------------------------------------------- - //
 	inline bool AddDrop( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
 		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
 		//   Row/Column //
@@ -2004,12 +2034,12 @@ public:
 			x = Index;
 			y = Height() - 1;
 		}
-		else  if ( OffsetY < 0 ) {
+		else  if ( OffsetY > 0 ) {
 			x = Index;
 			y = 0;
 		}
 		
-		if ( CanDrop( x, y, OffsetX, OffsetY ) ) {
+		if ( CanSet(x,y) ) {
 			Swap( x, y, Value );
 			return true;
 		}
@@ -2035,14 +2065,16 @@ public:
 			x = ClipX(Index);
 			y = Height() - 1;
 		}
-		else  if ( OffsetY < 0 ) {
+		else  if ( OffsetY > 0 ) {
 			x = ClipX(Index);
 			y = 0;
 		}
 		
-		if ( int Distance = CalcDropDistance( x, y, OffsetX, OffsetY ) ) {
+		if ( CanSet( x, y ) ) {
 			Swap( x, y, Value );
-			ApplyDropDistance( x, y, Distance, OffsetX, OffsetY );
+			if ( int Distance = CalcDropDistance( x, y, OffsetX, OffsetY ) ) {
+				ApplyDropDistance( x, y, Distance, OffsetX, OffsetY );
+			}
 			return true;
 		}
 
