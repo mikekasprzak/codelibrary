@@ -1732,11 +1732,16 @@ public:
 	// Return a grid of all distances a tile can drop //
 	inline const Grid2D<int> GenerateDropDistanceGrid( const int OffsetX = 0, const int OffsetY = 1, const tType& Value = tType() ) const {
 		// Our drop grid //
-		Grid2D<int> DropGrid(Width(), Height() );
+		Grid2D<int> DropGrid( Width(), Height() );
 		
 		for ( int x = 0; x < Width(); x++ ) {
 			for ( int y = 0; y < Height(); y++ ) {
-				DropGrid( x, y ) = CalcDropDistance( x, y, OffsetX, OffsetY, Value );
+				if ( operator()(x,y) == 0 ) {
+					DropGrid(x,y) = 0;
+				}
+				else {
+					DropGrid( x, y ) = CalcDropDistance( x, y, OffsetX, OffsetY, Value );
+				}
 			}
 		}
 		
