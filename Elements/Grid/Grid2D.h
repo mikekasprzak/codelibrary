@@ -1630,8 +1630,8 @@ public:
 		y = ClipY( y );
 		
 		// Bail if the tile is already empty //
-		if ( operator()(x,y) == Value )
-			return 0;
+//		if ( operator()(x,y) == Value )
+//			return 0;
 			
 		int DropDistance = 0;
 		
@@ -1986,35 +1986,143 @@ public:
 
 
 	// - -------------------------------------------------------------------------------------- - //
-	inline bool CanSet( const int x, const int y ) const {
+	inline const bool CanISet( const int x, const int y ) const {
 		return operator()(x,y) == 0;
 	}
 	// - -------------------------------------------------------------------------------------- - //
-//	inline bool CanAddDrop( const int Index, const int OffsetX, const int OffsetY, const tType& TestValue = tType()) {
-//		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
-//		//   Row/Column //
-//
-//		int x, y;
-//		
-//		if ( OffsetX < 0 ) {
-//			x = Width() - 1;
-//			y = Index;
-//		}
-//		else if ( OffsetX > 0 ) {
-//			x = 0;
-//			y = Index;
-//		}
-//		else if ( OffsetY < 0 ) {
-//			x = Index;
-//			y = Height() - 1;
-//		}
-//		else  if ( OffsetY > 0 ) {
-//			x = Index;
-//			y = 0;
-//		}
-//		
-//		return operator()(x,y) == TestValue;
-//	}
+	inline const bool CanIDrop( const int Index, const int OffsetX, const int OffsetY ) const {
+		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+		//   Row/Column //
+
+		int x, y;
+		
+		if ( OffsetX < 0 ) {
+			x = Width() - 1;
+			y = Index;
+		}
+		else if ( OffsetX > 0 ) {
+			x = 0;
+			y = Index;
+		}
+		else if ( OffsetY < 0 ) {
+			x = Index;
+			y = Height() - 1;
+		}
+		else  if ( OffsetY > 0 ) {
+			x = Index;
+			y = 0;
+		}
+		
+		return CanISet(x,y);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline tType& Edge( const int Index, const int OffsetX, const int OffsetY ) {
+		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+		//   Row/Column //
+
+		int x, y;
+		
+		if ( OffsetX < 0 ) {
+			x = Width() - 1;
+			y = Index;
+		}
+		else if ( OffsetX > 0 ) {
+			x = 0;
+			y = Index;
+		}
+		else if ( OffsetY < 0 ) {
+			x = Index;
+			y = Height() - 1;
+		}
+		else  if ( OffsetY > 0 ) {
+			x = Index;
+			y = 0;
+		}
+		
+		return operator()(x,y);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline tType& EdgeDistance( const int Index, const int OffsetX, const int OffsetY ) {
+		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+		//   Row/Column //
+
+		int x, y;
+		
+		if ( OffsetX < 0 ) {
+			x = Width() - 1;
+			y = ClipY(Index);
+		}
+		else if ( OffsetX > 0 ) {
+			x = 0;
+			y = ClipY(Index);
+		}
+		else if ( OffsetY < 0 ) {
+			x = ClipX(Index);
+			y = Height() - 1;
+		}
+		else  if ( OffsetY > 0 ) {
+			x = ClipX(Index);
+			y = 0;
+		}
+		
+		int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
+		
+		return operator()(x + (OffsetX*Distance), y + (OffsetY*Distance));
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const int EdgeIndex( const int _Index, const int OffsetX, const int OffsetY ) {
+		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+		//   Row/Column //
+
+		int x, y;
+		
+		if ( OffsetX < 0 ) {
+			x = Width() - 1;
+			y = _Index;
+		}
+		else if ( OffsetX > 0 ) {
+			x = 0;
+			y = _Index;
+		}
+		else if ( OffsetY < 0 ) {
+			x = _Index;
+			y = Height() - 1;
+		}
+		else  if ( OffsetY > 0 ) {
+			x = _Index;
+			y = 0;
+		}
+		
+		return Index(x,y);
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	inline const int EdgeDistanceIndex( const int _Index, const int OffsetX, const int OffsetY ) {
+		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
+		//   Row/Column //
+
+		int x, y;
+		
+		if ( OffsetX < 0 ) {
+			x = Width() - 1;
+			y = ClipY(_Index);
+		}
+		else if ( OffsetX > 0 ) {
+			x = 0;
+			y = ClipY(_Index);
+		}
+		else if ( OffsetY < 0 ) {
+			x = ClipX(_Index);
+			y = Height() - 1;
+		}
+		else  if ( OffsetY > 0 ) {
+			x = ClipX(_Index);
+			y = 0;
+		}
+		
+		int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
+		
+		return Index(x + (OffsetX*Distance), y + (OffsetY*Distance));
+	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline bool AddDrop( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
 		// Place "Value" in the side described by "OffsetX" and "OffsetY", in the "Index" of that //
@@ -2039,7 +2147,7 @@ public:
 			y = 0;
 		}
 		
-		if ( CanSet(x,y) ) {
+		if ( CanISet(x,y) ) {
 			Swap( x, y, Value );
 			return true;
 		}
@@ -2070,7 +2178,7 @@ public:
 			y = 0;
 		}
 		
-		if ( CanSet( x, y ) ) {
+		if ( CanISet( x, y ) ) {
 			Swap( x, y, Value );
 			if ( int Distance = CalcDropDistance( x, y, OffsetX, OffsetY ) ) {
 				ApplyDropDistance( x, y, Distance, OffsetX, OffsetY );
