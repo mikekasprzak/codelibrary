@@ -1992,7 +1992,7 @@ public:
 
 	// - -------------------------------------------------------------------------------------- - //
 	inline const bool CanISet( const int x, const int y ) const {
-		return operator()(x,y) == 0;
+		return Clip(x,y) == 0;
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const bool CanIDrop( const int Index, const int OffsetX, const int OffsetY ) const {
@@ -2044,7 +2044,7 @@ public:
 			y = 0;
 		}
 		
-		return operator()(x,y);
+		return Clip(x,y);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline tType& EdgeDistance( const int Index, const int OffsetX, const int OffsetY ) {
@@ -2072,7 +2072,7 @@ public:
 		
 		int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
 		
-		return operator()(x + (OffsetX*Distance), y + (OffsetY*Distance));
+		return Clip(x + (OffsetX*Distance), y + (OffsetY*Distance));
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int EdgeIndex( const int _Index, const int OffsetX, const int OffsetY ) {
@@ -2098,7 +2098,7 @@ public:
 			y = 0;
 		}
 		
-		return Index(x,y);
+		return IndexClip(x,y);
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline const int EdgeDistanceIndex( const int _Index, const int OffsetX, const int OffsetY ) {
@@ -2126,7 +2126,7 @@ public:
 		
 		int Distance = CalcDropDistance( x, y, OffsetX, OffsetY );
 		
-		return Index(x + (OffsetX*Distance), y + (OffsetY*Distance));
+		return IndexClip(x + (OffsetX*Distance), y + (OffsetY*Distance));
 	}
 	// - -------------------------------------------------------------------------------------- - //
 	inline bool AddDrop( const int Index, const int OffsetX, const int OffsetY, const tType& Value ) {
