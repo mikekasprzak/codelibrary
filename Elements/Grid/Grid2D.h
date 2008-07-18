@@ -1165,6 +1165,62 @@ public:
 		return CurrentCount;
 	}
 	// - -------------------------------------------------------------------------------------- - //
+	// Return the number of non instances of a value //
+	inline const size_t CountGT( const tType& Value ) const {
+		size_t CurrentCount = 0;
+
+		for ( size_t _y = Height(); _y--; ) {
+			for ( size_t _x = Width(); _x--; ) {
+				if ( operator()( _x, _y ) > Value )
+					CurrentCount++;
+			}
+		}	
+		
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the number of non instances of a value //
+	inline const size_t CountLT( const tType& Value ) const {
+		size_t CurrentCount = 0;
+
+		for ( size_t _y = Height(); _y--; ) {
+			for ( size_t _x = Width(); _x--; ) {
+				if ( operator()( _x, _y ) < Value )
+					CurrentCount++;
+			}
+		}	
+		
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the number of non instances of a value //
+	inline const size_t CountGTE( const tType& Value ) const {
+		size_t CurrentCount = 0;
+
+		for ( size_t _y = Height(); _y--; ) {
+			for ( size_t _x = Width(); _x--; ) {
+				if ( operator()( _x, _y ) >= Value )
+					CurrentCount++;
+			}
+		}	
+		
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Return the number of non instances of a value //
+	inline const size_t CountLTE( const tType& Value ) const {
+		size_t CurrentCount = 0;
+
+		for ( size_t _y = Height(); _y--; ) {
+			for ( size_t _x = Width(); _x--; ) {
+				if ( operator()( _x, _y ) <= Value )
+					CurrentCount++;
+			}
+		}	
+		
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles equal to the tile we point to. //
