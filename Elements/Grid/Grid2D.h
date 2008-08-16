@@ -1801,8 +1801,8 @@ public:
 		
 		for ( int x = 0; x < Width(); x++ ) {
 			for ( int y = 0; y < Height(); y++ ) {
-				if ( operator()(x,y) == 0 ) {
-					DropGrid(x,y) = 0;
+				if ( operator()( x, y ) == 0 ) {
+					DropGrid( x, y ) = 0;
 				}
 				else {
 					DropGrid( x, y ) = CalcDropDistance( x, y, OffsetX, OffsetY, Value );
