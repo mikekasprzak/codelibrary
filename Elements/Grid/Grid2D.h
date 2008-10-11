@@ -1298,6 +1298,66 @@ public:
 	// - -------------------------------------------------------------------------------------- - //
 
 	// - -------------------------------------------------------------------------------------- - //
+	// Clear the number of instances of tiles equal to the tile we point to. //
+	inline const size_t ClearAdjacentX( int x, int y ) const {
+		size_t CurrentCount = 1;
+		x = ClipX( x );
+		y = ClipY( y );
+		tType Value = operator()( x, y );
+		operator()( x, y ) = 0;
+
+		for ( int _x = x; _x-- > 0; ) {
+			if ( operator()( _x, y ) == Value ) {
+				operator()( _x, y ) = 0;
+				CurrentCount++;
+			}
+			else
+				break;
+		}
+
+		for ( int _x = x; ++_x < Width(); ) {
+			if ( operator()( _x, y ) == Value ) {
+				operator()( _x, y ) = 0;
+				CurrentCount++;
+			}
+			else
+				break;
+		}
+		
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+	// Clear the number of instances of tiles equal to the tile we point to. //
+	inline const size_t ClearAdjacentY( int x, int y ) const {
+		size_t CurrentCount = 1;
+		x = ClipX( x );
+		y = ClipY( y );
+		tType Value = operator()( x, y );
+		operator()( x, y ) = 0; 
+
+		for ( int _y = y; _y-- > 0; ) {
+			if ( operator()( x, _y ) == Value ) {
+				operator()( x, _y ) = 0;
+				CurrentCount++;
+			}
+			else
+				break;
+		}
+
+		for ( int _y = y; ++_y < Height(); ) {
+			if ( operator()( x, _y ) == Value ) {
+				operator()( x, _y ) = 0;
+				CurrentCount++;
+			}
+			else
+				break;
+		}
+		
+		return CurrentCount;
+	}
+	// - -------------------------------------------------------------------------------------- - //
+
+	// - -------------------------------------------------------------------------------------- - //
 	// Count the number of instances of tiles on a line //
 	inline const size_t CountLineX( int y, const tType& Value ) const {
 		size_t CurrentCount = 0;
